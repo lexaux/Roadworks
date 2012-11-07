@@ -1,4 +1,4 @@
-package com.augmentari.roadworks.sensorlogger;
+package com.augmentari.roadworks.sensorlogger.util;
 
 /**
  * Logger which already does supply correct tag to filter later on.

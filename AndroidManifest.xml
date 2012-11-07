@@ -13,7 +13,7 @@
             </intent-filter>
         </activity>
 
-        <service android:exported="false" android:name=".TestService"/>
+        <service android:exported="false" android:name=".SensorLoggerService"/>
 
 
     </application>

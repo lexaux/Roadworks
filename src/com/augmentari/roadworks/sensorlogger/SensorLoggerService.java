@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.text.format.DateFormat;
+import com.augmentari.roadworks.sensorlogger.util.Log;
 
 import java.io.*;
 import java.util.Calendar;
@@ -18,15 +19,16 @@ import java.util.Calendar;
  * 1) collecting data from various sources (accelerometer, GPS, maybe microphone)
  * 2) packing it, preparing and sending to the rest (server)
  */
-public class TestService extends Service implements SensorEventListener {
+public class SensorLoggerService extends Service implements SensorEventListener {
 
+    // size of the buffer for the file stream; .5M for a start
+    public static final int BUFFER_SIZE = 512 * 1024;
     private SensorManager sensorManager;
 
     private Sensor accelerometer;
-
-    private volatile boolean alreadyStarted = false;
     private FileOutputStream outputStream;
     private PrintWriter fileResultsWriter;
+
     public static final String TIME_FORMAT = "hh:mm:ss";
 
     @Override
@@ -40,14 +42,20 @@ public class TestService extends Service implements SensorEventListener {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         try {
             outputStream = openFileOutput(MainActivity.OUTPUT_FILE_NAME, Context.MODE_WORLD_READABLE);
-            fileResultsWriter = new PrintWriter(new OutputStreamWriter(outputStream));
-
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);
+            fileResultsWriter = new PrintWriter(new OutputStreamWriter(bufferedOutputStream));
             writeHeading(outputStream);
         } catch (FileNotFoundException e) {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
             throw new RuntimeException(e);
         }
 
-        Log.i("Created TestService");
         super.onCreate();
     }
 
@@ -57,25 +65,21 @@ public class TestService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (!alreadyStarted) {
+        if (accelerometer == null) {
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         }
-        Log.i("Starting TestService in a thread " + Thread.currentThread().getName());
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        try {
-            fileResultsWriter.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Log.i("Destroying service");
         sensorManager.unregisterListener(this);
+
+        // seem like don't need to close 'lower' streams, as this delegates close command down the
+        // chain till the fileOutputStream
+        fileResultsWriter.close();
+
         super.onDestroy();
     }
 
@@ -88,7 +92,6 @@ public class TestService extends Service implements SensorEventListener {
                 .append(",").append(sensorEvent.values[1])
                 .append(",").append(sensorEvent.values[2]);
         fileResultsWriter.println(sb.toString());
-        Log.i("Sensor hit at " + time);
     }
 
     @Override

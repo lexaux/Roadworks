@@ -9,12 +9,14 @@ import android.os.PowerManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import com.augmentari.roadworks.sensorlogger.util.Log;
 
 import java.io.File;
 
 public class MainActivity extends Activity {
 
     public static final String OUTPUT_FILE_NAME = "data.csv";
+
     private Button shareResutsButton;
     private Button stopServiceButton;
     private Button startServiceButton;
@@ -64,7 +66,7 @@ public class MainActivity extends Activity {
     }
 
     public void startServiceButtonClicked(View sender) {
-        Intent testServiceIntent = new Intent(this, TestService.class);
+        Intent testServiceIntent = new Intent(this, SensorLoggerService.class);
         startService(testServiceIntent);
         stopServiceButton.setEnabled(true);
         startServiceButton.setEnabled(false);
@@ -78,7 +80,7 @@ public class MainActivity extends Activity {
     public void stopServiceButtonClicked(View sender) {
         wl.release();
 
-        Intent stopServiceIntent = new Intent(this, TestService.class);
+        Intent stopServiceIntent = new Intent(this, SensorLoggerService.class);
         stopService(stopServiceIntent);
         stopServiceButton.setEnabled(false);
         startServiceButton.setEnabled(true);
