@@ -10,5 +10,22 @@
             android:layout_height="wrap_content"
             android:text="@string/test"
             />
+    <Button
+            android:id="@+id/startServiceButton"
+            android:onClick="startServiceButtonClicked"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/startServiceButton"/>
+    <Button
+            android:id="@+id/stopServiceButton"
+            android:onClick="stopServiceButtonClicked"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/stopServiceButton"/>
+    <Button android:id="@+id/shareResultsButton"
+            android:onClick="shareResultsButtonClicked"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sendFileButton"/>
 </LinearLayout>
 
