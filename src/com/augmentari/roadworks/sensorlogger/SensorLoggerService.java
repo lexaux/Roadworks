@@ -1,5 +1,7 @@
 package com.augmentari.roadworks.sensorlogger;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.text.format.DateFormat;
@@ -17,6 +23,7 @@ import com.augmentari.roadworks.sensorlogger.util.Log;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,26 +32,32 @@ import java.util.TimerTask;
  * 1) collecting data from various sources (accelerometer, GPS, maybe microphone)
  * 2) packing it, preparing and sending to the rest (server)
  */
-public class SensorLoggerService extends Service implements SensorEventListener {
+public class SensorLoggerService extends Service implements SensorEventListener, LocationListener {
 
     // size of the buffer for the file stream; .5M for a start
-    public static final int BUFFER_SIZE = 512 * 1024;
+    public static final int BUFFER_SIZE = 128 * 1024;
 
     public static final String INTENT_UPDATE_LOGGER_DATA_SECONDS_LOGGED = "startTime";
     public static final String INTENT_UPDATE_LOGGER_DATA_STATEMENTS_LOGGED = "statementsLogged";
     public static final String INTENT_UPDATE_LOGGER_DATA = "com.augmentari.roadworks.sensorlogger.UPDATE_STATISTICS";
 
     // how often to send broadcast event to update interface (for isnstance)
-    public static final int UPDATE_PERIOD_MSEC = 1000;
+    public static final int UPDATE_PERIOD_MSEC = 2000;
 
     private SensorManager sensorManager;
-
     private Sensor accelerometer;
+    private LocationManager locationManager;
+
     private FileOutputStream outputStream;
     private PrintWriter fileResultsWriter;
 
     private long startTimeMillis;
     private long statementsLogged;
+
+    private double latitude = 0;
+    private double longitude = 0;
+    private float speed = 0;
+    private Date lastFixTime = null;
 
     private Timer timer = new Timer("SensorLoggerService.BroadcastResultsUpater");
 
@@ -68,6 +81,7 @@ public class SensorLoggerService extends Service implements SensorEventListener 
     @Override
     public void onCreate() {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try {
             outputStream = openFileOutput(MainActivity.OUTPUT_FILE_NAME, Context.MODE_WORLD_READABLE);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);
@@ -87,15 +101,11 @@ public class SensorLoggerService extends Service implements SensorEventListener 
         super.onCreate();
     }
 
-    private void writeHeading() {
-        fileResultsWriter.println("Time, Sensor 1, Sensor 2, Sensor 3");
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (accelerometer == null) {
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
             wakeLock.acquire();
@@ -109,6 +119,8 @@ public class SensorLoggerService extends Service implements SensorEventListener 
                     sendUpdateBroadcast();
                 }
             }, 0, UPDATE_PERIOD_MSEC);
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
         return START_STICKY;
     }
@@ -140,10 +152,16 @@ public class SensorLoggerService extends Service implements SensorEventListener 
                         Formats.formatReadableBytesSize(getResultsFile(getFilesDir()).length())),
                 Toast.LENGTH_LONG).show();
         timer.cancel();
+        locationManager.removeUpdates(this);
 
         super.onDestroy();
 
     }
+
+    private void writeHeading() {
+        fileResultsWriter.println("Time, Accelerometer Sensor 1, Sensor 2, Sensor 3, Gps Speed, Latitude, Longitude");
+    }
+
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -153,11 +171,40 @@ public class SensorLoggerService extends Service implements SensorEventListener 
         sb.append(time)
                 .append(",").append(sensorEvent.values[0])
                 .append(",").append(sensorEvent.values[1])
-                .append(",").append(sensorEvent.values[2]);
+                .append(",").append(sensorEvent.values[2])
+                .append(",").append(speed)
+                .append(",").append(latitude)
+                .append(",").append(longitude);
         fileResultsWriter.println(sb.toString());
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+        Log.i("onAccuracyChanged");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("onLocationChanged");
+
+        lastFixTime = new Date();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        speed = location.getSpeed();
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+        Log.i("onStatusChanged");
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        Log.i("onProviderEnabled");
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        Log.i("onProviderDisabled");
     }
 }

@@ -20,4 +20,5 @@
     <string name="dataGatheringStarted">Started recording location and accelerometer readings.</string>
     <string name="timeLoggedMessage">Time logged</string>
     <string name="linesLoggedMessage">Samples logged</string>
+    <string name="foregroundServiceLabel">Logging road quality data</string>
 </resources>
