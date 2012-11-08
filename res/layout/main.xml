@@ -34,5 +34,45 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/clearFileButton"/>
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent" android:baselineAligned="false">
+
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1">
+            <TextView android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/timeLoggedMessage"
+                      android:gravity="center"/>
+            <TextView
+                    android:id="@+id/timeLoggedTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/noData"
+                    android:gravity="center"
+                    android:textSize="30dip"/>
+        </LinearLayout>
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1">
+            <TextView android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/linesLoggedMessage"
+                      android:gravity="center"/>
+            <TextView
+                    android:id="@+id/statementsLoggedTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/noData"
+                    android:gravity="center"
+                    android:textSize="30dip"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
 

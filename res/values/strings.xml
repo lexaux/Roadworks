@@ -3,12 +3,12 @@
     <string name="app_name">Roadworks.SensorLogger</string>
     <string name="mainActivityName">Roadworks sensor logger</string>
     <string name="test">This application is intended to log accelerometer readings while the service is running. Once
-        the server is stopped, packaged data in the format of CSV may be sent to any destination with standard OS
+        the service is stopped, packaged data in the format of CSV may be sent to any destination with standard OS
         support.
     </string>
-    <string name="startServiceButton">Start accelerometer logger</string>
-    <string name="stopServiceButton">Stop accelerometer logger</string>
-    <string name="sendFileButton">Share results CSV file somehow</string>
+    <string name="startServiceButton">Start logger</string>
+    <string name="stopServiceButton">Stop logger</string>
+    <string name="sendFileButton">Send results...</string>
     <string name="sendToInvitation">Send results:</string>
     <string name="fileCollectedSizeMessage">Done collecting sensor data. Data written to a storage, size is {0}</string>
     <string name="questionSureToOverwriteDataFile">Data file exists, sure to discard and overwrite?</string>
@@ -16,4 +16,8 @@
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="clearFileButton">Clear the file</string>
+    <string name="noData">--</string>
+    <string name="dataGatheringStarted">Started recording location and accelerometer readings.</string>
+    <string name="timeLoggedMessage">Time logged</string>
+    <string name="linesLoggedMessage">Samples logged</string>
 </resources>

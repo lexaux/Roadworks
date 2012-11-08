@@ -2,13 +2,14 @@ package com.augmentari.roadworks.sensorlogger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 
 import java.io.File;
@@ -22,6 +23,9 @@ public class MainActivity extends Activity {
     private Button shareResutsButton;
     private Button stopServiceButton;
     private Button startServiceButton;
+    private TextView timeLoggedTextView;
+    private TextView statementsLoggedTextView;
+    private BroadcastReceiver serviceUpdateInfoReceiver;
 
 
     /**
@@ -31,15 +35,38 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.i("testing logging.");
-
         setContentView(R.layout.main);
         startServiceButton = (Button) findViewById(R.id.startServiceButton);
         stopServiceButton = (Button) findViewById(R.id.stopServiceButton);
         shareResutsButton = (Button) findViewById(R.id.shareResultsButton);
 
+        statementsLoggedTextView = (TextView) findViewById(R.id.statementsLoggedTextView);
+        timeLoggedTextView = (TextView) findViewById(R.id.timeLoggedTextView);
+
         stopServiceButton.setEnabled(false);
         shareResutsButton.setEnabled(false);
+
+        serviceUpdateInfoReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (SensorLoggerService.INTENT_UPDATE_LOGGER_DATA.equals(intent.getAction())) {
+                    timeLoggedTextView.setText(Formats.formatTimeFromSeconds(intent.getLongExtra(SensorLoggerService.INTENT_UPDATE_LOGGER_DATA_SECONDS_LOGGED, 0)));
+                    statementsLoggedTextView.setText(Formats.formatWithSuffices(intent.getLongExtra(SensorLoggerService.INTENT_UPDATE_LOGGER_DATA_STATEMENTS_LOGGED, 0)));
+                    return;
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        registerReceiver(serviceUpdateInfoReceiver, new IntentFilter(SensorLoggerService.INTENT_UPDATE_LOGGER_DATA));
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -56,12 +83,9 @@ public class MainActivity extends Activity {
         if (savedInstanceState.containsKey("startServiceButtonEnabled")) {
             startServiceButton.setEnabled(savedInstanceState.getBoolean("startServiceButtonEnabled"));
         }
-
         if (savedInstanceState.containsKey("stopServiceButtonEnabled")) {
             stopServiceButton.setEnabled(savedInstanceState.getBoolean("stopServiceButtonEnabled"));
         }
-
-
         if (savedInstanceState.containsKey("shareResultsButtonEnabled")) {
             shareResutsButton.setEnabled(savedInstanceState.getBoolean("shareResultsButtonEnabled"));
         }
@@ -91,13 +115,12 @@ public class MainActivity extends Activity {
         }
     }
 
-
     private void actualStartSensorService() {
         Intent testServiceIntent = new Intent(this, SensorLoggerService.class);
         startService(testServiceIntent);
         stopServiceButton.setEnabled(true);
         startServiceButton.setEnabled(false);
-        Toast.makeText(this, "Started recording location and accelerometer readings.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.dataGatheringStarted, Toast.LENGTH_SHORT).show();
     }
 
     public void onStopServiceClick(View sender) {
@@ -119,7 +142,8 @@ public class MainActivity extends Activity {
     }
 
     public void onClearClick(View sender) {
-        Log.logNotImplemented();
+        Log.logNotImplemented(this);
     }
+
 
 }

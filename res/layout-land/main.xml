@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1">
+        <LinearLayout android:orientation="vertical"
+                      android:layout_height="wrap_content"
+                      android:layout_width="wrap_content"
+                      android:baselineAligned="false"
+                      android:layout_weight="1">
+            <TextView
+                    android:id="@+id/textViewField"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/test"
+                    />
+            <Button
+                    android:id="@+id/startServiceButton"
+                    android:onClick="onStartServiceClick"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/startServiceButton"/>
+            <Button
+                    android:id="@+id/stopServiceButton"
+                    android:onClick="onStopServiceClick"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stopServiceButton"/>
+
+            <Button android:id="@+id/shareResultsButton"
+                    android:onClick="onShareResultsClick"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sendFileButton"/>
+
+            <Button android:id="@+id/clearFileButton"
+                    android:onClick="onClearClick"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clearFileButton"/>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"
+                  android:baselineAligned="false"
+                  android:layout_weight="1">
+
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1">
+            <TextView android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/timeLoggedMessage"
+                      android:gravity="center"/>
+            <TextView
+                    android:id="@+id/timeLoggedTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/noData"
+                    android:gravity="center"
+                    android:textSize="30dip"/>
+        </LinearLayout>
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1">
+            <TextView android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/linesLoggedMessage"
+                      android:gravity="center"/>
+            <TextView
+                    android:id="@+id/statementsLoggedTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/noData"
+                    android:gravity="center"
+                    android:textSize="30dip"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

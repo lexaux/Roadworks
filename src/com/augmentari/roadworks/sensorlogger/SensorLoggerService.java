@@ -17,6 +17,8 @@ import com.augmentari.roadworks.sensorlogger.util.Log;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Sample service -- will be doing 2 things later:
@@ -27,11 +29,24 @@ public class SensorLoggerService extends Service implements SensorEventListener 
 
     // size of the buffer for the file stream; .5M for a start
     public static final int BUFFER_SIZE = 512 * 1024;
+
+    public static final String INTENT_UPDATE_LOGGER_DATA_SECONDS_LOGGED = "startTime";
+    public static final String INTENT_UPDATE_LOGGER_DATA_STATEMENTS_LOGGED = "statementsLogged";
+    public static final String INTENT_UPDATE_LOGGER_DATA = "com.augmentari.roadworks.sensorlogger.UPDATE_STATISTICS";
+
+    // how often to send broadcast event to update interface (for isnstance)
+    public static final int UPDATE_PERIOD_MSEC = 1000;
+
     private SensorManager sensorManager;
 
     private Sensor accelerometer;
     private FileOutputStream outputStream;
     private PrintWriter fileResultsWriter;
+
+    private long startTimeMillis;
+    private long statementsLogged;
+
+    private Timer timer = new Timer("SensorLoggerService.BroadcastResultsUpater");
 
     // A Wake Lock object. Lock is acquired when the application asks the service to start listening to events, and
     // is releaserd when the service is actually stopped. As this wake lock is a PARTIAL one, screen may go off but the
@@ -80,13 +95,29 @@ public class SensorLoggerService extends Service implements SensorEventListener 
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (accelerometer == null) {
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
             wakeLock.acquire();
 
+            startTimeMillis = System.currentTimeMillis();
+            statementsLogged = 0;
+
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    sendUpdateBroadcast();
+                }
+            }, 0, UPDATE_PERIOD_MSEC);
         }
         return START_STICKY;
+    }
+
+    private void sendUpdateBroadcast() {
+        Intent updateUIIntent = new Intent(INTENT_UPDATE_LOGGER_DATA);
+        updateUIIntent.putExtra(INTENT_UPDATE_LOGGER_DATA_SECONDS_LOGGED, (System.currentTimeMillis() - startTimeMillis) / 1000);
+        updateUIIntent.putExtra(INTENT_UPDATE_LOGGER_DATA_STATEMENTS_LOGGED, statementsLogged);
+        sendBroadcast(updateUIIntent);
     }
 
     @Override
@@ -101,19 +132,22 @@ public class SensorLoggerService extends Service implements SensorEventListener 
         if (fileResultsWriter != null) {
             fileResultsWriter.close();
         }
-
+        sendUpdateBroadcast();
         Toast.makeText(
                 this,
                 MessageFormat.format(
                         getString(R.string.fileCollectedSizeMessage),
-                        Formats.readableDataSize(getResultsFile(getFilesDir()).length())),
+                        Formats.formatReadableBytesSize(getResultsFile(getFilesDir()).length())),
                 Toast.LENGTH_LONG).show();
+        timer.cancel();
 
         super.onDestroy();
+
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        statementsLogged++;
         StringBuilder sb = new StringBuilder();
         String time = DateFormat.format(TIME_FORMAT, Calendar.getInstance()).toString();
         sb.append(time)
