@@ -8,10 +8,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.text.format.DateFormat;
+import android.widget.Toast;
+import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 
 import java.io.*;
+import java.text.MessageFormat;
 import java.util.Calendar;
 
 /**
@@ -29,7 +33,16 @@ public class SensorLoggerService extends Service implements SensorEventListener 
     private FileOutputStream outputStream;
     private PrintWriter fileResultsWriter;
 
+    // A Wake Lock object. Lock is acquired when the application asks the service to start listening to events, and
+    // is releaserd when the service is actually stopped. As this wake lock is a PARTIAL one, screen may go off but the
+    // processor should remain running in the background
+    private PowerManager.WakeLock wakeLock = null;
+
     public static final String TIME_FORMAT = "hh:mm:ss";
+
+    static File getResultsFile(File filesDir) {
+        return new File(filesDir, MainActivity.OUTPUT_FILE_NAME);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,7 +57,7 @@ public class SensorLoggerService extends Service implements SensorEventListener 
             outputStream = openFileOutput(MainActivity.OUTPUT_FILE_NAME, Context.MODE_WORLD_READABLE);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);
             fileResultsWriter = new PrintWriter(new OutputStreamWriter(bufferedOutputStream));
-            writeHeading(outputStream);
+            writeHeading();
         } catch (FileNotFoundException e) {
             if (outputStream != null) {
                 try {
@@ -59,7 +72,7 @@ public class SensorLoggerService extends Service implements SensorEventListener 
         super.onCreate();
     }
 
-    private void writeHeading(FileOutputStream outputStream) {
+    private void writeHeading() {
         fileResultsWriter.println("Time, Sensor 1, Sensor 2, Sensor 3");
     }
 
@@ -68,6 +81,10 @@ public class SensorLoggerService extends Service implements SensorEventListener 
         if (accelerometer == null) {
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
+            wakeLock.acquire();
+
         }
         return START_STICKY;
     }
@@ -78,7 +95,19 @@ public class SensorLoggerService extends Service implements SensorEventListener 
 
         // seem like don't need to close 'lower' streams, as this delegates close command down the
         // chain till the fileOutputStream
-        fileResultsWriter.close();
+        if (wakeLock != null) {
+            wakeLock.release();
+        }
+        if (fileResultsWriter != null) {
+            fileResultsWriter.close();
+        }
+
+        Toast.makeText(
+                this,
+                MessageFormat.format(
+                        getString(R.string.fileCollectedSizeMessage),
+                        Formats.readableDataSize(getResultsFile(getFilesDir()).length())),
+                Toast.LENGTH_LONG).show();
 
         super.onDestroy();
     }

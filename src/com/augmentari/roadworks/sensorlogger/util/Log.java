@@ -21,4 +21,8 @@ public class Log {
     public static void d(String message) {
         android.util.Log.d(TAG, message);
     }
+
+    public static void logNotImplemented() {
+        e("Not implemented! " + Thread.currentThread().getStackTrace()[0]);
+    }
 }

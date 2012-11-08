@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Roadworks.SensorLogger</string>
+    <string name="mainActivityName">Roadworks sensor logger</string>
     <string name="test">This application is intended to log accelerometer readings while the service is running. Once
         the server is stopped, packaged data in the format of CSV may be sent to any destination with standard OS
         support.
@@ -9,4 +10,10 @@
     <string name="stopServiceButton">Stop accelerometer logger</string>
     <string name="sendFileButton">Share results CSV file somehow</string>
     <string name="sendToInvitation">Send results:</string>
+    <string name="fileCollectedSizeMessage">Done collecting sensor data. Data written to a storage, size is {0}</string>
+    <string name="questionSureToOverwriteDataFile">Data file exists, sure to discard and overwrite?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="clearFileButton">Clear the file</string>
 </resources>

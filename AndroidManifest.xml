@@ -6,7 +6,7 @@
     <uses-sdk android:minSdkVersion="15"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
         <activity android:name=".MainActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/mainActivityName">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -14,7 +14,6 @@
         </activity>
 
         <service android:exported="false" android:name=".SensorLoggerService"/>
-
 
     </application>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
