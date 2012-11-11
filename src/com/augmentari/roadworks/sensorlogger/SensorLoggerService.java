@@ -167,8 +167,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     public void onSensorChanged(SensorEvent sensorEvent) {
         statementsLogged++;
         StringBuilder sb = new StringBuilder();
-        String time = DateFormat.format(TIME_FORMAT, Calendar.getInstance()).toString();
-        sb.append(time)
+        sb.append(System.currentTimeMillis()) //as we need to re-sample the actual sequence to a constant sample rate
                 .append(",").append(sensorEvent.values[0])
                 .append(",").append(sensorEvent.values[1])
                 .append(",").append(sensorEvent.values[2])
