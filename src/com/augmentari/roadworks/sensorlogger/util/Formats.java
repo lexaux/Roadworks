@@ -31,9 +31,14 @@ public class Formats {
         return new DecimalFormat("#,##0.#").format(value / Math.pow(1024, digitGroups)) + " " + prefixes[digitGroups];
 
     }
+
     public static DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
 
     public static CharSequence formatTimeFromSeconds(long value) {
         return twoDigitDecimalFormat.format(value / 60) + ":" + twoDigitDecimalFormat.format(value % 60);
+    }
+
+    public static boolean isEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 }

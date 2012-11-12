@@ -1,7 +1,5 @@
 package com.augmentari.roadworks.sensorlogger;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,14 +13,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.text.format.DateFormat;
 import android.widget.Toast;
+import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
+import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 
 import java.io.*;
 import java.text.MessageFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -61,6 +59,8 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     private Timer timer = new Timer("SensorLoggerService.BroadcastResultsUpater");
 
+    private RecordingSessionDAO recordingSessionDAO;
+
     // A Wake Lock object. Lock is acquired when the application asks the service to start listening to events, and
     // is releaserd when the service is actually stopped. As this wake lock is a PARTIAL one, screen may go off but the
     // processor should remain running in the background
@@ -68,9 +68,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     public static final String TIME_FORMAT = "hh:mm:ss";
 
-    static File getResultsFile(File filesDir) {
-        return new File(filesDir, MainActivity.OUTPUT_FILE_NAME);
-    }
+    private RecordingSession currentSession;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -82,28 +80,39 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     public void onCreate() {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        try {
-            outputStream = openFileOutput(MainActivity.OUTPUT_FILE_NAME, Context.MODE_WORLD_READABLE);
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);
-            fileResultsWriter = new PrintWriter(new OutputStreamWriter(bufferedOutputStream));
-            writeHeading();
-        } catch (FileNotFoundException e) {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            throw new RuntimeException(e);
-        }
-
+        recordingSessionDAO = new RecordingSessionDAO(this);
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (accelerometer == null) {
+            try {
+
+                currentSession = new RecordingSession();
+                currentSession.setStartTime(new Date());
+
+                String shortFileName = "data" + currentSession.getStartTime().getTime() + ".log";
+                currentSession.setDataFileFullPath(new File(getFilesDir(),
+                        shortFileName).getAbsolutePath());
+                recordingSessionDAO.open();
+                currentSession = recordingSessionDAO.createRecordingSession(currentSession);
+
+                outputStream = openFileOutput(shortFileName, Context.MODE_WORLD_READABLE);
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);
+                fileResultsWriter = new PrintWriter(new OutputStreamWriter(bufferedOutputStream));
+                writeHeading();
+            } catch (FileNotFoundException e) {
+                if (outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                throw new RuntimeException(e);
+            }
+
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -144,15 +153,21 @@ public class SensorLoggerService extends Service implements SensorEventListener,
         if (fileResultsWriter != null) {
             fileResultsWriter.close();
         }
+
+        timer.cancel();
+        locationManager.removeUpdates(this);
+
+        recordingSessionDAO.open();
+        recordingSessionDAO.finishSession(currentSession.getId(), statementsLogged, new Date());
+        recordingSessionDAO.close();
+
         sendUpdateBroadcast();
         Toast.makeText(
                 this,
                 MessageFormat.format(
                         getString(R.string.fileCollectedSizeMessage),
-                        Formats.formatReadableBytesSize(getResultsFile(getFilesDir()).length())),
+                        Formats.formatReadableBytesSize(new File(currentSession.getDataFileFullPath()).length())),
                 Toast.LENGTH_LONG).show();
-        timer.cancel();
-        locationManager.removeUpdates(this);
 
         super.onDestroy();
 

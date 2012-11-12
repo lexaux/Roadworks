@@ -1,8 +1,10 @@
 package com.augmentari.roadworks.sensorlogger;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +19,6 @@ import java.io.File;
 
 public class MainActivity extends Activity {
 
-    public static final String OUTPUT_FILE_NAME = "data.csv";
     public static final String FILE_SHARE_MIME_TYPE = "text/plain";
 
     private Button shareResutsButton;
@@ -92,27 +93,27 @@ public class MainActivity extends Activity {
     }
 
     public void onStartServiceClick(View sender) {
-        if (!SensorLoggerService.getResultsFile(getFilesDir()).exists()) {
-            //don't bother, we don't have anything to erase.
-            actualStartSensorService();
-        } else {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            actualStartSensorService();
-                            break;
-                    }
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(getString(R.string.questionSureToOverwriteDataFile))
-                    .setPositiveButton(getString(R.string.yes), dialogClickListener)
-                    .setNegativeButton(getString(R.string.no), dialogClickListener)
-                    .show();
-        }
+//        if (!SensorLoggerService.getResultsFile(getFilesDir()).exists()) {
+        //don't bother, we don't have anything to erase.
+        actualStartSensorService();
+//        } else {
+//            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    switch (which) {
+//                        case DialogInterface.BUTTON_POSITIVE:
+//                            actualStartSensorService();
+//                            break;
+//                    }
+//                }
+//            };
+//
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setMessage(getString(R.string.questionSureToOverwriteDataFile))
+//                    .setPositiveButton(getString(R.string.yes), dialogClickListener)
+//                    .setNegativeButton(getString(R.string.no), dialogClickListener)
+//                    .show();
+//        }
     }
 
     private void actualStartSensorService() {
@@ -132,13 +133,13 @@ public class MainActivity extends Activity {
     }
 
     public void onShareResultsClick(View sender) {
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-
-        File resultFile = SensorLoggerService.getResultsFile(getFilesDir());
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(resultFile));
-        shareIntent.setType(FILE_SHARE_MIME_TYPE);
-        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.sendToInvitation)));
+//        Intent shareIntent = new Intent();
+//        shareIntent.setAction(Intent.ACTION_SEND);
+//
+//        File resultFile = SensorLoggerService.getResultsFile(getFilesDir());
+//        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(resultFile));
+//        shareIntent.setType(FILE_SHARE_MIME_TYPE);
+//        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.sendToInvitation)));
     }
 
     public void onClearClick(View sender) {
