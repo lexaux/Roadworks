@@ -24,9 +24,39 @@ public class MainActivity extends Activity {
     private Button shareResutsButton;
     private Button stopServiceButton;
     private Button startServiceButton;
+
     private TextView timeLoggedTextView;
     private TextView statementsLoggedTextView;
+
     private BroadcastReceiver serviceUpdateInfoReceiver;
+
+    private View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.shareResultsButton:
+                    Log.logNotImplemented(MainActivity.this);
+                    break;
+                case R.id.startServiceButton:
+                    Intent testServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
+                    startService(testServiceIntent);
+                    stopServiceButton.setEnabled(true);
+                    startServiceButton.setEnabled(false);
+                    Toast.makeText(MainActivity.this, R.string.dataGatheringStarted, Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.stopServiceButton:
+                    Intent stopServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
+                    stopService(stopServiceIntent);
+                    stopServiceButton.setEnabled(false);
+                    startServiceButton.setEnabled(true);
+                    shareResutsButton.setEnabled(true);
+                    break;
+                default:
+                    Log.logNotImplemented(MainActivity.this);
+                    break;
+            }
+        }
+    };
 
 
     /**
@@ -38,8 +68,13 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main);
         startServiceButton = (Button) findViewById(R.id.startServiceButton);
+        startServiceButton.setOnClickListener(buttonOnClickListener);
+
         stopServiceButton = (Button) findViewById(R.id.stopServiceButton);
+        stopServiceButton.setOnClickListener(buttonOnClickListener);
+
         shareResutsButton = (Button) findViewById(R.id.shareResultsButton);
+        shareResutsButton.setOnClickListener(buttonOnClickListener);
 
         statementsLoggedTextView = (TextView) findViewById(R.id.statementsLoggedTextView);
         timeLoggedTextView = (TextView) findViewById(R.id.timeLoggedTextView);
@@ -91,60 +126,4 @@ public class MainActivity extends Activity {
             shareResutsButton.setEnabled(savedInstanceState.getBoolean("shareResultsButtonEnabled"));
         }
     }
-
-    public void onStartServiceClick(View sender) {
-//        if (!SensorLoggerService.getResultsFile(getFilesDir()).exists()) {
-        //don't bother, we don't have anything to erase.
-        actualStartSensorService();
-//        } else {
-//            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    switch (which) {
-//                        case DialogInterface.BUTTON_POSITIVE:
-//                            actualStartSensorService();
-//                            break;
-//                    }
-//                }
-//            };
-//
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setMessage(getString(R.string.questionSureToOverwriteDataFile))
-//                    .setPositiveButton(getString(R.string.yes), dialogClickListener)
-//                    .setNegativeButton(getString(R.string.no), dialogClickListener)
-//                    .show();
-//        }
-    }
-
-    private void actualStartSensorService() {
-        Intent testServiceIntent = new Intent(this, SensorLoggerService.class);
-        startService(testServiceIntent);
-        stopServiceButton.setEnabled(true);
-        startServiceButton.setEnabled(false);
-        Toast.makeText(this, R.string.dataGatheringStarted, Toast.LENGTH_SHORT).show();
-    }
-
-    public void onStopServiceClick(View sender) {
-        Intent stopServiceIntent = new Intent(this, SensorLoggerService.class);
-        stopService(stopServiceIntent);
-        stopServiceButton.setEnabled(false);
-        startServiceButton.setEnabled(true);
-        shareResutsButton.setEnabled(true);
-    }
-
-    public void onShareResultsClick(View sender) {
-//        Intent shareIntent = new Intent();
-//        shareIntent.setAction(Intent.ACTION_SEND);
-//
-//        File resultFile = SensorLoggerService.getResultsFile(getFilesDir());
-//        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(resultFile));
-//        shareIntent.setType(FILE_SHARE_MIME_TYPE);
-//        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.sendToInvitation)));
-    }
-
-    public void onClearClick(View sender) {
-        Log.logNotImplemented(this);
-    }
-
-
 }
