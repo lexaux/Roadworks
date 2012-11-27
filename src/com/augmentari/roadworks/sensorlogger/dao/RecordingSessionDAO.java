@@ -82,6 +82,17 @@ public class RecordingSessionDAO {
         return session;
     }
 
+    public Cursor getAllSessionsSortById() {
+        return database.query(
+                SQLiteHelperImpl.TABLE_SESSIONS,
+                SQLiteHelperImpl.ALL_COLUMNS,
+                "",
+                null,
+                null,
+                null,
+                SQLiteHelperImpl.FIELD_ID);
+    }
+
     private RecordingSession cursorToSession(Cursor cursor) {
         RecordingSession sess = new RecordingSession();
 //        public static final String[] ALL_COLUMNS = {

@@ -35,7 +35,8 @@ public class MainActivity extends Activity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.shareResultsButton:
-                    Log.logNotImplemented(MainActivity.this);
+                    Intent intent = new Intent(MainActivity.this, SessionListActivity.class);
+                    MainActivity.this.startActivity(intent);
                     break;
                 case R.id.startServiceButton:
                     Intent testServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
@@ -102,6 +103,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onPause() {
+        unregisterReceiver(serviceUpdateInfoReceiver);
         super.onPause();
     }
 
