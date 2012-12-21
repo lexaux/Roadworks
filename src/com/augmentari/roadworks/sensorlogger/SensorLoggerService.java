@@ -1,5 +1,7 @@
 package com.augmentari.roadworks.sensorlogger;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +43,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     // how often to send broadcast event to update interface (for isnstance)
     public static final int UPDATE_PERIOD_MSEC = 2000;
+    public static final int ONGOING_NOTIFICATION = 1;
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -86,6 +89,20 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Intent notificationIntent = new Intent(this, SessionListActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification = new Notification.Builder(this)
+                .setTicker(getString(R.string.serviceNotificationTicker))
+                .setContentTitle(getString(R.string.serviceNotificationTitle))
+                .setContentText(getString(R.string.serviceNotificationText))
+                .setSmallIcon(R.drawable.ic_stat_logger_notification)
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .build();
+        startForeground(ONGOING_NOTIFICATION, notification);
+
         if (accelerometer == null) {
             try {
 
@@ -143,6 +160,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     @Override
     public void onDestroy() {
+        stopForeground(true);
         sensorManager.unregisterListener(this);
 
         // seem like don't need to close 'lower' streams, as this delegates close command down the

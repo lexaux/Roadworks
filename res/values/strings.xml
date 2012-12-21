@@ -22,4 +22,8 @@
     <string name="linesLoggedMessage">Samples logged</string>
     <string name="foregroundServiceLabel">Logging road quality data</string>
     <string name="sessionListActivityName">Session list</string>
+
+    <string name="serviceNotificationTicker">Recording started</string>
+    <string name="serviceNotificationText">Recording sensor data for road qaulity assessment</string>
+    <string name="serviceNotificationTitle">RoadWorks</string>
 </resources>
