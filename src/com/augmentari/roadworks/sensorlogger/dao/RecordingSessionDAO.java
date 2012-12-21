@@ -90,19 +90,11 @@ public class RecordingSessionDAO {
                 null,
                 null,
                 null,
-                SQLiteHelperImpl.FIELD_ID);
+                SQLiteHelperImpl.FIELD_ID + " DESC");
     }
 
     private RecordingSession cursorToSession(Cursor cursor) {
         RecordingSession sess = new RecordingSession();
-//        public static final String[] ALL_COLUMNS = {
-//                FIELD_ID,
-//                FIELD_START_TIME,
-//                FIELD_END_TIME,
-//                FIELD_STATE,
-//                FIELD_DATA_FILE_PATH,
-//                FIELD_EVENTS_LOGGED_COUNT
-//        };
 
         sess.setId(cursor.getLong(0));
         sess.setStartTime(new Date(cursor.getLong(1)));

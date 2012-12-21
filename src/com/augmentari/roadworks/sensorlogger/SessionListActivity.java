@@ -1,11 +1,15 @@
 package com.augmentari.roadworks.sensorlogger;
 
+import android.*;
+import android.R;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.AndroidCharacter;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.dao.SQLiteHelperImpl;
+import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 
 /**
@@ -52,15 +57,40 @@ public class SessionListActivity extends ListActivity implements LoaderManager.L
         mAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                String stateString = cursor.getString(cursor.getColumnIndex(SQLiteHelperImpl.FIELD_STATE));
+                RecordingSession.State state = RecordingSession.State.valueOf(stateString);
+
                 StringBuilder bldr = new StringBuilder(
                         DateFormat.format("MMM dd, hh:mm",
                                 cursor.getLong(cursor.getColumnIndex(SQLiteHelperImpl.FIELD_START_TIME))))
                         .append("-")
                         .append(cursor.getLong(cursor.getColumnIndex(SQLiteHelperImpl.FIELD_EVENTS_LOGGED_COUNT)))
                         .append("-")
-                        .append(cursor.getString(cursor.getColumnIndex(SQLiteHelperImpl.FIELD_STATE)));
+                        .append(stateString);
 
                 ((TextView) view).setText(bldr.toString());
+
+                int color = Color.GRAY;
+                switch (state) {
+                    case LOGGING:
+                        color = Color.WHITE;
+                        break;
+
+                    case LOGGED:
+                        color = Color.YELLOW;
+                        break;
+
+                    case PROCESSED:
+                    case PROCESSING:
+                        color = Color.BLUE;
+                        break;
+
+                    case UPLOADED:
+                    case UPLOADING:
+                        color = Color.GREEN;
+                        break;
+                }
+                ((TextView) view).setTextColor(color);
                 return true;
             }
         });
