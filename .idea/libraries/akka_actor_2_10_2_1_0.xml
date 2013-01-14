@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="akka-actor_2.10-2.1.0">
+    <CLASSES>
+      <root url="jar:///opt/akka-2.1.0/lib/akka/akka-actor_2.10-2.1.0.jar!/" />
+      <root url="jar:///opt/akka-2.1.0/lib/akka/akka-mailboxes-common_2.10-2.1.0.jar!/" />
+      <root url="jar:///opt/akka-2.1.0/lib/akka/akka-remote_2.10-2.1.0.jar!/" />
+      <root url="jar:///opt/akka-2.1.0/lib/akka/akka-slf4j_2.10-2.1.0.jar!/" />
+      <root url="jar:///opt/akka-2.1.0/lib/akka/akka-transactor_2.10-2.1.0.jar!/" />
+      <root url="jar:///opt/akka-2.1.0/lib/akka/config-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="http://doc.akka.io/api/akka/2.1.0" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar:///opt/akka-2.1.0/src/akka/akka-actor_2.10-2.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
