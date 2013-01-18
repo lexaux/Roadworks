@@ -5,7 +5,7 @@
       <element id="javaee-facet-resources" facet="scala-akka-rest-test/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="scala-akka-rest-test" />
+          <element id="module-output" name="Roadworks_RestAPI" />
           <element id="file-copy" path="$PROJECT_DIR$/resources/application.conf" />
         </element>
         <element id="directory" name="lib">
