@@ -13,6 +13,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SessionListActivity" android:label="@string/sessionListActivityName"/>
+        <activity android:name=".PrefActivity" android:label="@string/prefActivity"/>
 
         <service android:exported="false" android:name=".SensorLoggerService"/>
 

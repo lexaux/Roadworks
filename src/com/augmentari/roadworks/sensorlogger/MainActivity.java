@@ -1,22 +1,19 @@
 package com.augmentari.roadworks.sensorlogger;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
-
-import java.io.File;
 
 
 public class MainActivity extends Activity {
@@ -115,6 +112,23 @@ public class MainActivity extends Activity {
         outState.putBoolean("startServiceButtonEnabled", startServiceButton.isEnabled());
         outState.putBoolean("stopServiceButtonEnabled", stopServiceButton.isEnabled());
         outState.putBoolean("shareResultsButtonEnabled", shareResutsButton.isEnabled());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settingsMenu:
+                Intent settingsActivityIntent = new Intent(this, PrefActivity.class);
+                startActivity(settingsActivityIntent);
+                break;
+        }
+        return true;
     }
 
     @Override

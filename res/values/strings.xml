@@ -26,4 +26,12 @@
     <string name="serviceNotificationTicker">Recording started</string>
     <string name="serviceNotificationText">Recording sensor data for road qaulity assessment</string>
     <string name="serviceNotificationTitle">RoadWorks</string>
+
+    <string name="pref_sync">Synchronization enabled?</string>
+    <string name="pref_sync_summ">Controls synchronization of the road data with cloud.</string>
+    <string name="pref_syncConnectionType">Which connection type to use</string>
+    <string name="pref_syncConnectionTypes_default">NONE</string>
+
+    <string name="prefActivity">Preferences</string>
+    <string name="pref_api_base_url_title">API base url</string>
 </resources>
