@@ -14,7 +14,7 @@ import com.lexaux.scala.model.Data
  * Sample REST service.
  * Will see how it goes.
  */
-@Path("helloworld1")
+@Path("helloworld")
 @Produces(Array("application/json"))
 class SessionService extends ServiceConstants {
 

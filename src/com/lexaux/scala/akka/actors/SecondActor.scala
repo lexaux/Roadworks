@@ -10,6 +10,7 @@ import com.lexaux.scala.model.Data
 class SecondActor extends Actor {
 
   val log = Logging(context.system, this)
+
   val creationTime = System.currentTimeMillis()
   log.info("Created SecondActor " + this)
 

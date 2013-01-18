@@ -34,6 +34,7 @@
     <orderEntry type="library" name="jsp-api" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="servlet-api" level="project" />
     <orderEntry type="library" name="jerseyAndJackson" level="project" />
+    <orderEntry type="library" name="grizzled-slf4j_2.10-1.0.1" level="project" />
   </component>
 </module>
 

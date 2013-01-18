@@ -1,21 +1,20 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="scala-akka-rest-test:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/scala_akka_rest_test_war_exploded</output-path>
+  <artifact type="exploded-war" name="Roadworks_RestAPI:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Roadworks_RestAPI_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="scala-akka-rest-test/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="Roadworks_RestAPI" />
-          <element id="file-copy" path="$PROJECT_DIR$/resources/application.conf" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="scala-library" />
           <element id="library" level="project" name="akka-actor_2.10-2.1.0" />
-          <element id="file-copy" path="$PROJECT_DIR$/lib/jersey/jersey-bundle-1.16.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/lib/jersey/asm-3.3.1.jar" />
           <element id="library" level="project" name="jerseyAndJackson" />
+          <element id="library" level="project" name="grizzled-slf4j_2.10-1.0.1" />
         </element>
       </element>
+      <element id="library" level="project" name="jsp-api" />
+      <element id="javaee-facet-resources" facet="Roadworks_RestAPI/web/Web" />
     </root>
   </artifact>
 </component>
