@@ -1,11 +1,10 @@
 package com.augmentari.roadworks.sensorlogger;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 
 public class MainActivity extends Activity {
@@ -127,6 +132,9 @@ public class MainActivity extends Activity {
                 Intent settingsActivityIntent = new Intent(this, PrefActivity.class);
                 startActivity(settingsActivityIntent);
                 break;
+            case R.id.testNetworking:
+                new TestNetworkingTask().execute();
+                break;
         }
         return true;
     }
@@ -143,5 +151,61 @@ public class MainActivity extends Activity {
         if (savedInstanceState.containsKey("shareResultsButtonEnabled")) {
             shareResutsButton.setEnabled(savedInstanceState.getBoolean("shareResultsButtonEnabled"));
         }
+    }
+
+    /**
+     * Tests networking.
+     */
+    class TestNetworkingTask extends AsyncTask<String, Void, String> {
+
+        public String readItSIC(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+            Reader reader = null;
+            reader = new InputStreamReader(stream, "UTF-8");
+            char[] buffer = new char[len];
+            reader.read(buffer);
+            return new String(buffer);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            InputStream is = null;
+            HttpURLConnection connection = null;
+            try {
+                String realUrl = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(PrefActivity.KEY_PREF_API_BASE_URL, "") + "api/helloworld/2";
+                URL url = new URL(realUrl);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+                is = connection.getInputStream();
+                String s = readItSIC(is, 4000);
+                return s;
+            } catch (MalformedURLException e) {
+                Log.e("malformed URL");
+                //TODO! refactor this out!
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                Log.e("IO Exception");
+                //TODO! refactor this out!
+                throw new RuntimeException(e);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String o) {
+            super.onPostExecute(o);
+            Toast.makeText(MainActivity.this, o, Toast.LENGTH_LONG);
+        }
+
     }
 }
