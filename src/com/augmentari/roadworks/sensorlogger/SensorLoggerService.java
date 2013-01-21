@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -34,15 +35,11 @@ import java.util.TimerTask;
  */
 public class SensorLoggerService extends Service implements SensorEventListener, LocationListener {
 
+    private boolean isStarted = false;
     // size of the buffer for the file stream; .5M for a start
     public static final int BUFFER_SIZE = 128 * 1024;
 
-    public static final String INTENT_UPDATE_LOGGER_DATA_SECONDS_LOGGED = "startTime";
-    public static final String INTENT_UPDATE_LOGGER_DATA_STATEMENTS_LOGGED = "statementsLogged";
-    public static final String INTENT_UPDATE_LOGGER_DATA = "com.augmentari.roadworks.sensorlogger.UPDATE_STATISTICS";
-
     // how often to send broadcast event to update interface (for isnstance)
-    public static final int UPDATE_PERIOD_MSEC = 2000;
     public static final int ONGOING_NOTIFICATION = 1;
 
     private SensorManager sensorManager;
@@ -58,9 +55,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     private double latitude = 0;
     private double longitude = 0;
     private float speed = 0;
-    private Date lastFixTime = null;
-
-    private Timer timer = new Timer("SensorLoggerService.BroadcastResultsUpater");
 
     private RecordingSessionDAO recordingSessionDAO;
 
@@ -75,8 +69,8 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.w("onBind called - but we don't allow binding so skipping.");
-        return null;
+        Log.i("OnBind");
+        return new SessionLoggerServiceBinder();
     }
 
     @Override
@@ -89,6 +83,9 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i("On start command");
+        isStarted = true;
+
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
@@ -105,7 +102,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
         if (accelerometer == null) {
             try {
-
                 currentSession = new RecordingSession();
                 currentSession.setStartTime(new Date());
 
@@ -139,27 +135,19 @@ public class SensorLoggerService extends Service implements SensorEventListener,
             startTimeMillis = System.currentTimeMillis();
             statementsLogged = 0;
 
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    sendUpdateBroadcast();
-                }
-            }, 0, UPDATE_PERIOD_MSEC);
-
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
         return START_STICKY;
     }
 
-    private void sendUpdateBroadcast() {
-        Intent updateUIIntent = new Intent(INTENT_UPDATE_LOGGER_DATA);
-        updateUIIntent.putExtra(INTENT_UPDATE_LOGGER_DATA_SECONDS_LOGGED, (System.currentTimeMillis() - startTimeMillis) / 1000);
-        updateUIIntent.putExtra(INTENT_UPDATE_LOGGER_DATA_STATEMENTS_LOGGED, statementsLogged);
-        sendBroadcast(updateUIIntent);
-    }
-
     @Override
     public void onDestroy() {
+        Log.i("On service destroy");
+        if (!isStarted) {
+            // we have only been bound, and no real action to take.
+            return;
+        }
+        isStarted = false;
         stopForeground(true);
         sensorManager.unregisterListener(this);
 
@@ -172,14 +160,12 @@ public class SensorLoggerService extends Service implements SensorEventListener,
             fileResultsWriter.close();
         }
 
-        timer.cancel();
         locationManager.removeUpdates(this);
 
         recordingSessionDAO.open();
         recordingSessionDAO.finishSession(currentSession.getId(), statementsLogged, new Date());
         recordingSessionDAO.close();
 
-        sendUpdateBroadcast();
         Toast.makeText(
                 this,
                 MessageFormat.format(
@@ -188,7 +174,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
                 Toast.LENGTH_LONG).show();
 
         super.onDestroy();
-
     }
 
     private void writeHeading() {
@@ -218,8 +203,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     @Override
     public void onLocationChanged(Location location) {
         Log.i("onLocationChanged");
-
-        lastFixTime = new Date();
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         speed = location.getSpeed();
@@ -238,5 +221,24 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     @Override
     public void onProviderDisabled(String s) {
         Log.i("onProviderDisabled");
+    }
+
+    public class SessionLoggerServiceBinder extends Binder {
+        public boolean isStarted() {
+            return isStarted;
+        }
+
+        public long getStartTimeMillis() {
+            return startTimeMillis;
+        }
+
+        public long getStatementsLogged() {
+            return statementsLogged;
+        }
+
+        public SensorLoggerService getService() {
+            return SensorLoggerService.this;
+        }
+
     }
 }

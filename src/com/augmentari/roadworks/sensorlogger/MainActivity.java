@@ -2,8 +2,8 @@ package com.augmentari.roadworks.sensorlogger;
 
 import android.app.Activity;
 import android.content.*;
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.graphics.Color;
+import android.os.*;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,36 +18,86 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends Activity {
+    private enum ServiceState {
+        DISCONNECTED,
+        STARTED,
+        STOPPED
+    }
 
-    public static final String FILE_SHARE_MIME_TYPE = "text/plain";
+    private Timer timer = null;
 
-    private Button stopServiceButton;
-    private Button startServiceButton;
+    public static final int UPDATE_PERIOD_MSEC = 2000;
+
+    private Button serviceControlButton;
+    private ServiceState serviceState = ServiceState.DISCONNECTED;
 
     private TextView timeLoggedTextView;
     private TextView statementsLoggedTextView;
 
-    private BroadcastReceiver serviceUpdateInfoReceiver;
+    private SensorLoggerService.SessionLoggerServiceBinder binder = null;
+
+    private Handler statsUpdateHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            timeLoggedTextView.setText(Long.toString((System.currentTimeMillis() - binder.getStartTimeMillis()) / 1000));
+            statementsLoggedTextView.setText(Formats.formatWithSuffices(binder.getStatementsLogged()));
+        }
+    };
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            binder = (SensorLoggerService.SessionLoggerServiceBinder) service;
+            if (binder.isStarted()) {
+                setServiceState(ServiceState.STARTED);
+            } else {
+                setServiceState(ServiceState.STOPPED);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            binder = null;
+            setServiceState(ServiceState.DISCONNECTED);
+        }
+    };
 
     private View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.startServiceButton:
-                    Intent testServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
-                    startService(testServiceIntent);
-                    stopServiceButton.setEnabled(true);
-                    startServiceButton.setEnabled(false);
-                    Toast.makeText(MainActivity.this, R.string.dataGatheringStarted, Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.stopServiceButton:
-                    Intent stopServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
-                    stopService(stopServiceIntent);
-                    stopServiceButton.setEnabled(false);
-                    startServiceButton.setEnabled(true);
+                case R.id.serviceControlButton:
+                    switch (serviceState) {
+                        case DISCONNECTED:
+                            throw new IllegalArgumentException("Should not be accessible");
+
+                        case STARTED:
+                            Intent stopServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
+                            stopService(stopServiceIntent);
+
+                            unbindService(connection);
+
+                            Intent intent = new Intent(MainActivity.this, SensorLoggerService.class);
+                            bindService(intent, connection, BIND_AUTO_CREATE);
+
+                            setServiceState(ServiceState.STOPPED);
+                            break;
+
+                        case STOPPED:
+                            Toast.makeText(MainActivity.this, R.string.dataGatheringStarted, Toast.LENGTH_SHORT).show();
+
+                            Intent testServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
+                            startService(testServiceIntent);
+
+                            setServiceState(ServiceState.STARTED);
+                            break;
+                    }
                     break;
                 default:
                     Log.logNotImplemented(MainActivity.this);
@@ -65,46 +115,68 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
-        startServiceButton = (Button) findViewById(R.id.startServiceButton);
-        startServiceButton.setOnClickListener(buttonOnClickListener);
-
-        stopServiceButton = (Button) findViewById(R.id.stopServiceButton);
-        stopServiceButton.setOnClickListener(buttonOnClickListener);
+        serviceControlButton = (Button) findViewById(R.id.serviceControlButton);
+        serviceControlButton.setOnClickListener(buttonOnClickListener);
 
         statementsLoggedTextView = (TextView) findViewById(R.id.statementsLoggedTextView);
         timeLoggedTextView = (TextView) findViewById(R.id.timeLoggedTextView);
+    }
 
-        stopServiceButton.setEnabled(false);
+    public void setServiceState(ServiceState serviceState) {
+        switch (serviceState) {
+            case DISCONNECTED:
+                serviceControlButton.setEnabled(false);
+                serviceControlButton.setText(getString(R.string.service_disconnected));
+                serviceControlButton.setBackgroundColor(Color.GRAY);
+                break;
 
-        serviceUpdateInfoReceiver = new BroadcastReceiver() {
+            case STARTED:
+                statsUpdateHandler.sendEmptyMessage(0);
+
+                serviceControlButton.setEnabled(true);
+                serviceControlButton.setText(getString(R.string.service_stop_command));
+                serviceControlButton.setBackgroundColor(Color.RED);
+                break;
+
+            case STOPPED:
+                serviceControlButton.setEnabled(true);
+                serviceControlButton.setText(getString(R.string.service_start_command));
+                serviceControlButton.setBackgroundColor(Color.GREEN);
+                break;
+        }
+        this.serviceState = serviceState;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        timer = new Timer("SensorLoggerService.BroadcastResultsUpdater");
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                if (SensorLoggerService.INTENT_UPDATE_LOGGER_DATA.equals(intent.getAction())) {
-                    timeLoggedTextView.setText(Formats.formatTimeFromSeconds(intent.getLongExtra(SensorLoggerService.INTENT_UPDATE_LOGGER_DATA_SECONDS_LOGGED, 0)));
-                    statementsLoggedTextView.setText(Formats.formatWithSuffices(intent.getLongExtra(SensorLoggerService.INTENT_UPDATE_LOGGER_DATA_STATEMENTS_LOGGED, 0)));
-                    return;
+            public void run() {
+                if (serviceState == ServiceState.STARTED) {
+                    statsUpdateHandler.sendEmptyMessage(0);
                 }
             }
-        };
+        }, 0, UPDATE_PERIOD_MSEC);
+
+
+        setServiceState(ServiceState.DISCONNECTED);
+
+        Intent intent = new Intent(this, SensorLoggerService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    protected void onResume() {
-        registerReceiver(serviceUpdateInfoReceiver, new IntentFilter(SensorLoggerService.INTENT_UPDATE_LOGGER_DATA));
-        super.onResume();
-    }
+    protected void onStop() {
+        super.onStop();
 
-    @Override
-    protected void onPause() {
-        unregisterReceiver(serviceUpdateInfoReceiver);
-        super.onPause();
-    }
+        timer.cancel();
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("startServiceButtonEnabled", startServiceButton.isEnabled());
-        outState.putBoolean("stopServiceButtonEnabled", stopServiceButton.isEnabled());
+        if (binder != null) {
+            unbindService(connection);
+        }
     }
 
     @Override
@@ -133,23 +205,13 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.containsKey("startServiceButtonEnabled")) {
-            startServiceButton.setEnabled(savedInstanceState.getBoolean("startServiceButtonEnabled"));
-        }
-        if (savedInstanceState.containsKey("stopServiceButtonEnabled")) {
-            stopServiceButton.setEnabled(savedInstanceState.getBoolean("stopServiceButtonEnabled"));
-        }
-    }
 
     /**
      * Tests networking.
      */
     class TestNetworkingTask extends AsyncTask<String, Void, String> {
 
-        public String readItSIC(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+        public String readItSIC(InputStream stream, int len) throws IOException {
             Reader reader = null;
             reader = new InputStreamReader(stream, "UTF-8");
             char[] buffer = new char[len];

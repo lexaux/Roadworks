@@ -19,20 +19,10 @@
                     android:text="@string/test"
                     />
             <Button
-                    android:id="@+id/startServiceButton"
+                    android:id="@+id/serviceControlButton"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/startServiceButton"/>
-            <Button
-                    android:id="@+id/stopServiceButton"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stopServiceButton"/>
-
-            <Button android:id="@+id/shareResultsButton"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/showSessionList"/>
+                    android:text="@string/service_disconnected"/>
         </LinearLayout>
     </ScrollView>
     <LinearLayout android:orientation="horizontal"

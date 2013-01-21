@@ -10,8 +10,10 @@
         the service is stopped, packaged data in the format of CSV may be sent to any destination with standard OS
         support.
     </string>
-    <string name="startServiceButton">Start logger</string>
-    <string name="stopServiceButton">Stop logger</string>
+    <string name="service_disconnected">Service disconnected.</string>
+    <string name="service_start_command">Start service</string>
+    <string name="service_stop_command">Stop service</string>
+
     <string name="showSessionList">Session list</string>
     <string name="fileCollectedSizeMessage">Done collecting sensor data. Data written to a storage, size is {0}</string>
     <string name="questionSureToOverwriteDataFile">Data file exists, sure to discard and overwrite?</string>
