@@ -8,8 +8,7 @@
     </string>
     <string name="startServiceButton">Start logger</string>
     <string name="stopServiceButton">Stop logger</string>
-    <string name="sendFileButton">Send results...</string>
-    <string name="sendToInvitation">Send results:</string>
+    <string name="showSessionList">Session list</string>
     <string name="fileCollectedSizeMessage">Done collecting sensor data. Data written to a storage, size is {0}</string>
     <string name="questionSureToOverwriteDataFile">Data file exists, sure to discard and overwrite?</string>
     <string name="yes">Yes</string>

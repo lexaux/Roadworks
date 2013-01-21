@@ -18,14 +18,12 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 
 public class MainActivity extends Activity {
 
     public static final String FILE_SHARE_MIME_TYPE = "text/plain";
 
-    private Button shareResutsButton;
     private Button stopServiceButton;
     private Button startServiceButton;
 
@@ -38,10 +36,6 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.shareResultsButton:
-                    Intent intent = new Intent(MainActivity.this, SessionListActivity.class);
-                    MainActivity.this.startActivity(intent);
-                    break;
                 case R.id.startServiceButton:
                     Intent testServiceIntent = new Intent(MainActivity.this, SensorLoggerService.class);
                     startService(testServiceIntent);
@@ -54,7 +48,6 @@ public class MainActivity extends Activity {
                     stopService(stopServiceIntent);
                     stopServiceButton.setEnabled(false);
                     startServiceButton.setEnabled(true);
-                    shareResutsButton.setEnabled(true);
                     break;
                 default:
                     Log.logNotImplemented(MainActivity.this);
@@ -78,14 +71,10 @@ public class MainActivity extends Activity {
         stopServiceButton = (Button) findViewById(R.id.stopServiceButton);
         stopServiceButton.setOnClickListener(buttonOnClickListener);
 
-        shareResutsButton = (Button) findViewById(R.id.shareResultsButton);
-        shareResutsButton.setOnClickListener(buttonOnClickListener);
-
         statementsLoggedTextView = (TextView) findViewById(R.id.statementsLoggedTextView);
         timeLoggedTextView = (TextView) findViewById(R.id.timeLoggedTextView);
 
         stopServiceButton.setEnabled(false);
-        shareResutsButton.setEnabled(false);
 
         serviceUpdateInfoReceiver = new BroadcastReceiver() {
             @Override
@@ -116,7 +105,6 @@ public class MainActivity extends Activity {
         super.onSaveInstanceState(outState);
         outState.putBoolean("startServiceButtonEnabled", startServiceButton.isEnabled());
         outState.putBoolean("stopServiceButtonEnabled", stopServiceButton.isEnabled());
-        outState.putBoolean("shareResultsButtonEnabled", shareResutsButton.isEnabled());
     }
 
     @Override
@@ -128,10 +116,16 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.showSessionList:
+                Intent showResultsList = new Intent(this, SessionListActivity.class);
+                startActivity(showResultsList);
+                break;
+
             case R.id.settingsMenu:
                 Intent settingsActivityIntent = new Intent(this, PrefActivity.class);
                 startActivity(settingsActivityIntent);
                 break;
+
             case R.id.testNetworking:
                 new TestNetworkingTask().execute();
                 break;
@@ -147,9 +141,6 @@ public class MainActivity extends Activity {
         }
         if (savedInstanceState.containsKey("stopServiceButtonEnabled")) {
             stopServiceButton.setEnabled(savedInstanceState.getBoolean("stopServiceButtonEnabled"));
-        }
-        if (savedInstanceState.containsKey("shareResultsButtonEnabled")) {
-            shareResutsButton.setEnabled(savedInstanceState.getBoolean("shareResultsButtonEnabled"));
         }
     }
 

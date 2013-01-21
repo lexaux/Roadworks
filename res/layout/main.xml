@@ -21,11 +21,6 @@
             android:layout_height="wrap_content"
             android:text="@string/stopServiceButton"/>
 
-    <Button android:id="@+id/shareResultsButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sendFileButton"/>
-
     <LinearLayout android:orientation="horizontal"
                   android:layout_height="wrap_content"
                   android:layout_width="fill_parent" android:baselineAligned="false">
