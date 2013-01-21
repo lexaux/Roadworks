@@ -1,15 +1,13 @@
 package com.augmentari.roadworks.sensorlogger;
 
-import android.*;
-import android.R;
 import android.app.ListActivity;
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.AndroidCharacter;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.*;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.dao.SQLiteHelperImpl;
 import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
-import com.augmentari.roadworks.sensorlogger.util.Formats;
 
 /**
  * Activity showing a list of the sessions with their info (status, kilometers logged etc).
@@ -35,15 +32,18 @@ public class SessionListActivity extends ListActivity implements LoaderManager.L
         getListView().setOnItemLongClickListener(this);
 
         // Create a progress bar to display while the list loads
-        ProgressBar progressBar = new ProgressBar(this);
-        progressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        progressBar.setIndeterminate(true);
-        getListView().setEmptyView(progressBar);
+        TextView textView = new TextView(this);
+        textView.setText("No data. Please record some sessions first");
+        textView.setLayoutParams(
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER));
+        getListView().setEmptyView(textView);
 
         // Must add the progress bar to the root of the layout
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
-        root.addView(progressBar);
+        root.addView(textView);
 
         // For the cursor adapter, specify which columns go into which views
         String[] fromColumns = {SQLiteHelperImpl.FIELD_ID};
@@ -132,10 +132,17 @@ public class SessionListActivity extends ListActivity implements LoaderManager.L
 
 class SessionListLoader extends SimpleCursorLoader {
 
+    //TODO: how do I check if there is really a mem leak?
+    // http://stackoverflow.com/questions/5796611/dialog-throwing-unable-to-add-window-token-null-is-not-for-an-application-wi
+    private ProgressDialog dialog = null;
+
     private RecordingSessionDAO recordingSessionDAO;
+
+    private final Context activityContext;
 
     public SessionListLoader(Context context) {
         super(context);
+        this.activityContext = context;
         recordingSessionDAO = new RecordingSessionDAO(context);
     }
 
@@ -143,7 +150,30 @@ class SessionListLoader extends SimpleCursorLoader {
     public Cursor loadInBackground() {
         recordingSessionDAO.open();
         Cursor cursor = recordingSessionDAO.getAllSessionsSortById();
-
         return cursor;
     }
+
+    @Override
+    public void onCanceled(Cursor cursor) {
+        dialog.dismiss();
+        super.onCanceled(cursor);
+    }
+
+    @Override
+    public void deliverResult(Cursor cursor) {
+        dialog.dismiss();
+        super.deliverResult(cursor);
+    }
+
+    @Override
+    protected void onStartLoading() {
+        dialog = ProgressDialog.show(
+                activityContext,
+                activityContext.getString(R.string.loading_title),
+                activityContext.getString(R.string.loading_text),
+                true,
+                false);
+        super.onStartLoading();
+    }
 }
+

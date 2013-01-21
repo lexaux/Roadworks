@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Roadworks.SensorLogger</string>
+
+    <string name="loading_title">Loading data</string>
+    <string name="loading_text">Please wait while application loads data. This should not take long</string>
+
     <string name="mainActivityName">Roadworks sensor logger</string>
     <string name="test">This application is intended to log accelerometer readings while the service is running. Once
         the service is stopped, packaged data in the format of CSV may be sent to any destination with standard OS
