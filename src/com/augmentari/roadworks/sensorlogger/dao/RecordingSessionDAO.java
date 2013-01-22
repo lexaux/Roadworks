@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -33,24 +34,35 @@ public class RecordingSessionDAO {
 
     /**
      * Create new recording.
+     * As a part of designed behavior, changes all sessions which have 'logging' state to 'FAILED'
      *
      * @param recordingSession
      * @return
      */
-    public RecordingSession createRecordingSession(RecordingSession recordingSession) {
+    public RecordingSession startNewRecordingSession(RecordingSession recordingSession) {
         if (Formats.isEmpty(recordingSession.getDataFileFullPath())) {
             throw new IllegalStateException("Should have start time set up prior to saving.");
         }
         recordingSession.setState(RecordingSession.State.LOGGING);
 
-        ContentValues cv = new ContentValues();
-        cv.put(SQLiteHelperImpl.FIELD_DATA_FILE_PATH, recordingSession.getDataFileFullPath());
-        cv.put(SQLiteHelperImpl.FIELD_START_TIME, recordingSession.getStartTime().getTime());
-        cv.put(SQLiteHelperImpl.FIELD_STATE, RecordingSession.State.LOGGING.name());
+        ContentValues cvUpdateLoggingSessionsToFailed = new ContentValues();
+        cvUpdateLoggingSessionsToFailed.put(SQLiteHelperImpl.FIELD_STATE, RecordingSession.State.FAILED.name());
+        int rowsAffected = database.update(
+                SQLiteHelperImpl.TABLE_SESSIONS,
+                cvUpdateLoggingSessionsToFailed,
+                SQLiteHelperImpl.FIELD_STATE + "=?",
+                new String[]{RecordingSession.State.LOGGING.name()}
+        );
+
+        ContentValues cvCreateNewSession = new ContentValues();
+        cvCreateNewSession.put(SQLiteHelperImpl.FIELD_DATA_FILE_PATH, recordingSession.getDataFileFullPath());
+        cvCreateNewSession.put(SQLiteHelperImpl.FIELD_START_TIME, recordingSession.getStartTime().getTime());
+        cvCreateNewSession.put(SQLiteHelperImpl.FIELD_STATE, RecordingSession.State.LOGGING.name());
         long insertId = database.insert(
                 SQLiteHelperImpl.TABLE_SESSIONS,
                 null,
-                cv);
+                cvCreateNewSession);
+
 
         return getSessionById(insertId);
     }

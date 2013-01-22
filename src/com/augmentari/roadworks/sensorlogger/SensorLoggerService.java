@@ -25,8 +25,6 @@ import com.augmentari.roadworks.sensorlogger.util.Log;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Sample service -- will be doing 2 things later:
@@ -109,7 +107,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
                 currentSession.setDataFileFullPath(new File(getFilesDir(),
                         shortFileName).getAbsolutePath());
                 recordingSessionDAO.open();
-                currentSession = recordingSessionDAO.createRecordingSession(currentSession);
+                currentSession = recordingSessionDAO.startNewRecordingSession(currentSession);
 
                 outputStream = openFileOutput(shortFileName, Context.MODE_WORLD_READABLE);
                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);

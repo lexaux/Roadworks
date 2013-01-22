@@ -18,7 +18,8 @@ public class RecordingSession {
         PROCESSING,
         PROCESSED,
         UPLOADING,
-        UPLOADED
+        UPLOADED,
+        FAILED
     }
     private long id;
 

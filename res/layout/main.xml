@@ -14,7 +14,9 @@
             android:id="@+id/serviceControlButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/service_disconnected"/>
+            android:text="@string/service_disconnected"
+            android:layout_margin="30dip"
+            />
 
     <LinearLayout android:orientation="horizontal"
                   android:layout_height="wrap_content"
