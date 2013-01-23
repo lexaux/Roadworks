@@ -4,26 +4,20 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-import org.apache.http.conn.ssl.StrictHostnameVerifier;
+import com.augmentari.roadworks.sensorlogger.net.ssl.NetworkingFactory;
+import com.augmentari.roadworks.sensorlogger.net.ssl.NetworkingException;
 
-import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URL;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertificateException;
+import java.net.HttpURLConnection;
 
 /**
  * Tests networking.
  */
 class TestNetworkingTask extends AsyncTask<String, Void, String> {
 
-    public static final String TRUSTED_KEYSTORE_PASSWORD = "changeit";
     private Context context;
 
     private Exception ex = null;
@@ -44,22 +38,10 @@ class TestNetworkingTask extends AsyncTask<String, Void, String> {
         ex = null;
 
         InputStream is = null;
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         try {
-            KeyStore keyStore = loadKeystore();
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
-            tmf.init(keyStore);
-
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, tmf.getTrustManagers(), null);
-
             String realUrl = PreferenceManager.getDefaultSharedPreferences(context).getString(PrefActivity.KEY_PREF_API_BASE_URL, "") + "api/helloworld/2";
-            URL url = new URL(realUrl);
-            connection = (HttpsURLConnection) url.openConnection();
-            connection.setHostnameVerifier(new StrictHostnameVerifier());
-            connection.setSSLSocketFactory(sslContext.getSocketFactory());
-
-            is = connection.getInputStream();
+            is = NetworkingFactory.openConnection(realUrl, context).getInputStream();
             String s = readItSIC(is, 4000);
             return s;
         } catch (Exception e) {
@@ -76,24 +58,6 @@ class TestNetworkingTask extends AsyncTask<String, Void, String> {
             }
             if (connection != null) {
                 connection.disconnect();
-            }
-        }
-    }
-
-    private KeyStore loadKeystore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, NoSuchProviderException {
-        KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-
-        // get user password and file input stream
-        char[] password = TRUSTED_KEYSTORE_PASSWORD.toCharArray();
-
-        InputStream fis = null;
-        try {
-            fis = context.getResources().openRawResource(R.raw.mystore);
-            ks.load(fis, password);
-            return ks;
-        } finally {
-            if (fis != null) {
-                fis.close();
             }
         }
     }
