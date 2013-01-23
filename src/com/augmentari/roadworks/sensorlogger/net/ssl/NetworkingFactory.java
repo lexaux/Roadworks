@@ -10,6 +10,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -41,15 +42,20 @@ public class NetworkingFactory {
      * @return open url connection. Don't forget to disconnect() it!
      * @throws NetworkingException in case of any exception (crypto, ...). Look into the cause for the details.
      */
-    public static HttpsURLConnection openConnection(String url, Context context) throws NetworkingException {
+    public static HttpURLConnection openConnection(String url, Context context) throws NetworkingException {
         try {
             ensureSslContextReady(context);
 
             URL urlObject = new URL(url);
-            HttpsURLConnection connection = (HttpsURLConnection) urlObject.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) urlObject.openConnection();
 
-            connection.setHostnameVerifier(HOSTNAME_VERIFIER);
-            connection.setSSLSocketFactory(sslContext.getSocketFactory());
+            // for regular HTTP connections, just skip that.
+            // for HTTPS, put in our own factory/host name verifier.
+            if (connection instanceof HttpsURLConnection) {
+                HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
+                httpsConnection.setHostnameVerifier(HOSTNAME_VERIFIER);
+                httpsConnection.setSSLSocketFactory(sslContext.getSocketFactory());
+            }
 
             return connection;
         } catch (Exception e) {

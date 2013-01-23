@@ -16,7 +16,6 @@
         <activity android:name=".PrefActivity" android:label="@string/prefActivity"/>
 
         <service android:exported="false" android:name=".SensorLoggerService"/>
-
     </application>
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>

@@ -95,7 +95,8 @@ public class SensorLoggerService extends Service implements SensorEventListener,
                 .setWhen(System.currentTimeMillis())
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
-                .build();
+                .getNotification();
+
         startForeground(ONGOING_NOTIFICATION, notification);
 
         if (accelerometer == null) {

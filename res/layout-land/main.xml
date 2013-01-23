@@ -23,7 +23,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/service_disconnected"
-                    android:layout_margin="15dip "/>
+                    android:layout_margin="15dip "
+                    android:padding="15dip"/>
         </LinearLayout>
     </ScrollView>
     <LinearLayout android:orientation="horizontal"
@@ -46,7 +47,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/noData"
                     android:gravity="center"
-                    android:textSize="30dip"/>
+                    android:textSize="30dip"
+                    />
         </LinearLayout>
         <LinearLayout android:orientation="vertical"
                       android:layout_width="wrap_content"
