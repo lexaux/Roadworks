@@ -1,19 +1,16 @@
 package com.augmentari.roadworks.sensorlogger;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
+import org.apache.http.conn.ssl.StrictHostnameVerifier;
 
-import javax.net.SocketFactory;
 import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -26,15 +23,17 @@ import java.security.cert.CertificateException;
  */
 class TestNetworkingTask extends AsyncTask<String, Void, String> {
 
+    public static final String TRUSTED_KEYSTORE_PASSWORD = "changeit";
     private Context context;
+
+    private Exception ex = null;
 
     public TestNetworkingTask(Context context) {
         this.context = context;
     }
 
     public String readItSIC(InputStream stream, int len) throws IOException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
+        Reader reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
         reader.read(buffer);
         return new String(buffer);
@@ -42,6 +41,8 @@ class TestNetworkingTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        ex = null;
+
         InputStream is = null;
         HttpsURLConnection connection = null;
         try {
@@ -55,14 +56,16 @@ class TestNetworkingTask extends AsyncTask<String, Void, String> {
             String realUrl = PreferenceManager.getDefaultSharedPreferences(context).getString(PrefActivity.KEY_PREF_API_BASE_URL, "") + "api/helloworld/2";
             URL url = new URL(realUrl);
             connection = (HttpsURLConnection) url.openConnection();
-            connection.setHostnameVerifier(new BrowserCompatHostnameVerifier());
+            connection.setHostnameVerifier(new StrictHostnameVerifier());
             connection.setSSLSocketFactory(sslContext.getSocketFactory());
 
             is = connection.getInputStream();
             String s = readItSIC(is, 4000);
             return s;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            ex = e;
+            e.printStackTrace();
+            return null;
         } finally {
             if (is != null) {
                 try {
@@ -81,7 +84,7 @@ class TestNetworkingTask extends AsyncTask<String, Void, String> {
         KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 
         // get user password and file input stream
-        char[] password = "changeit".toCharArray();
+        char[] password = TRUSTED_KEYSTORE_PASSWORD.toCharArray();
 
         InputStream fis = null;
         try {
@@ -98,7 +101,11 @@ class TestNetworkingTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String o) {
         super.onPostExecute(o);
-        Toast.makeText(context, o, Toast.LENGTH_LONG);
+        if (ex != null) {
+            Toast.makeText(context, "Error accessing network!\n" + ex.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, o, Toast.LENGTH_LONG).show();
+        }
     }
 
 }
