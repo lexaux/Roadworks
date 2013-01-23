@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Roadworks_RestAPI:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/Roadworks_RestAPI_war</output-path>
+    <root id="archive" name="Roadworks_RestAPI_war.war">
+      <element id="artifact" artifact-name="Roadworks_RestAPI:war exploded" />
+    </root>
+  </artifact>
+</component>

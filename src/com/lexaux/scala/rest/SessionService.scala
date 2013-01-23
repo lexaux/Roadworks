@@ -2,13 +2,10 @@ package com.lexaux.scala.rest
 
 import javax.ws.rs.{GET, PathParam, Produces, Path}
 import akka.pattern.ask
-import com.lexaux.scala.akka.actors.SecondActor
+import com.lexaux.scala.akka.actors.{TestMessage, SecondActor}
 import akka.actor.Props
 import concurrent.Await
-import akka.util.Timeout
-import java.util.concurrent.TimeUnit
 import com.lexaux.scala.akka.servlet.AkkaApplication
-import com.lexaux.scala.model.Data
 
 /**
  * Sample REST service.
@@ -22,7 +19,7 @@ class SessionService extends ServiceConstants {
   @Path("{id}")
   def getObjectById(@PathParam("id") id: String) = {
     val actor = AkkaApplication.getSystem.actorOf(Props[SecondActor])
-    val future = actor ? "Ping2"
+    val future = actor ? TestMessage(augmentString(id).toInt)
     Await.result(future, timeout.duration)
   }
 }

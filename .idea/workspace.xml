@@ -2,23 +2,16 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="Roadworks_RestAPI:war exploded" />
+      <artifact name="Roadworks_RestAPI:war" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="973b1f67-cde3-412d-a35b-1ef18187dc8f" name="Default" comment="Removed references to SPray and other unneeded pieces.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/slf4j/grizzled-slf4j_2.10-1.0.1-javadoc.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/slf4j/grizzled-slf4j_2.10-1.0.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/slf4j/slf4j-api-1.7.2.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/slf4j/slf4j-jdk14-1.7.2.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/grizzled_slf4j_2_10_1_0_1.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/artifacts/scala_akka_rest_test_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/Roadworks_RestAPI_war_exploded.xml" />
+    <list default="true" id="973b1f67-cde3-412d-a35b-1ef18187dc8f" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/Roadworks_RestAPI_war.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Roadworks_RestAPI.iml" afterPath="$PROJECT_DIR$/Roadworks_RestAPI.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/SecondActor.scala" afterPath="$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/SecondActor.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lexaux/scala/akka/servlet/AkkaApplication.scala.scala" afterPath="$PROJECT_DIR$/src/com/lexaux/scala/akka/servlet/AkkaApplication.scala.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lexaux/scala/rest/SessionService.scala" afterPath="$PROJECT_DIR$/src/com/lexaux/scala/rest/SessionService.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/WEB-INF/web.xml" afterPath="$PROJECT_DIR$/web/WEB-INF/web.xml" />
     </list>
     <ignored path="scala-akka-rest-test.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -100,37 +93,66 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="SessionService.scala" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/SessionService.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="68" selection-start="692" selection-end="692" vertical-scroll-proportion="0.9493671">
+              <folding>
+                <element signature="e#31#82#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="AkkaApplication.scala.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/servlet/AkkaApplication.scala.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="25" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
+            <state line="9" column="6" selection-start="213" selection-end="213" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="web.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/web/WEB-INF/web.xml">
-          <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleGeneralEditorProvider">
-            <state />
-          </provider>
-          <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorReferencesProvider">
-            <state />
-          </provider>
+      <file leaf-file-name="FirstActorWithLogging.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/FirstActorWithLogging.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="34" selection-start="1287" selection-end="1287" vertical-scroll-proportion="1.2244898">
+            <state line="14" column="6" selection-start="291" selection-end="291" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
-          <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorProvider">
-            <state />
+        </entry>
+      </file>
+      <file leaf-file-name="Data.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/model/Data.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="11" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ServletContextListener.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///opt/tomcat/lib/servlet-api.jar!/javax/servlet/ServletContextListener.class">
+      <file leaf-file-name="JSONContextResolver.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/JSONContextResolver.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="17" selection-start="155" selection-end="155" vertical-scroll-proportion="-2.4">
+            <state line="23" column="0" selection-start="622" selection-end="622" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServiceConstants.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/ServiceConstants.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="12" selection-start="217" selection-end="217" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SecondActor.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/SecondActor.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="0" selection-start="183" selection-end="183" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -168,10 +190,10 @@
         <option value="$PROJECT_DIR$/src/com/lexaux/scala/rest/ServiceConstants.scala" />
         <option value="$PROJECT_DIR$/src/com/lexaux/scala/rest/JSONContextResolver.scala" />
         <option value="$PROJECT_DIR$/resources/application.conf" />
-        <option value="$PROJECT_DIR$/src/com/lexaux/scala/rest/SessionService.scala" />
-        <option value="$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/SecondActor.scala" />
         <option value="$PROJECT_DIR$/src/com/lexaux/scala/akka/servlet/AkkaApplication.scala.scala" />
         <option value="$PROJECT_DIR$/web/WEB-INF/web.xml" />
+        <option value="$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/SecondActor.scala" />
+        <option value="$PROJECT_DIR$/src/com/lexaux/scala/rest/SessionService.scala" />
       </list>
     </option>
   </component>
@@ -222,31 +244,17 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="scala-akka-rest-test" />
+              <option name="myItemId" value="Roadworks_RestAPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="scala-akka-rest-test" />
+              <option name="myItemId" value="Roadworks_RestAPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -256,7 +264,7 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="scala-akka-rest-test" />
+              <option name="myItemId" value="Roadworks_RestAPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -274,7 +282,7 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="scala-akka-rest-test" />
+              <option name="myItemId" value="Roadworks_RestAPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -282,13 +290,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lexaux" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="scala-akka-rest-test" />
+              <option name="myItemId" value="Roadworks_RestAPI" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -296,8 +316,74 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lexaux" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Roadworks_RestAPI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Roadworks_RestAPI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lexaux" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="akka" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Roadworks_RestAPI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Roadworks_RestAPI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lexaux" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -320,7 +406,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="Repository.Attach.JavaDocs" value="false" />
@@ -331,8 +417,8 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/lib" />
   </component>
@@ -371,24 +457,6 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method>
-        <option name="AntTarget" enabled="false" />
-        <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="true" />
-        <option name="Maven.BeforeRunTask" enabled="false" />
-      </method>
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -415,6 +483,24 @@
       <envs />
       <properties />
       <listeners />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method>
         <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
@@ -599,7 +685,11 @@
       <created>1358517112100</created>
       <updated>1358517112100</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Fixing application to shutdown correctly.&#10;Adding logging support (grizzled-slf4j).&#10;Adding slf4j.">
+      <created>1358521346235</created>
+      <updated>1358521346235</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -627,7 +717,7 @@
     <editor active="false" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32986537" sideWeight="0.6400911" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.49658313" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32986537" sideWeight="0.6400911" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.249694" sideWeight="0.6400911" order="1" side_tool="false" content_ui="tabs" />
@@ -637,13 +727,13 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30833334" sideWeight="0.24496645" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32986537" sideWeight="0.6400911" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32671082" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3257403" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32986537" sideWeight="0.6400911" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3289183" sideWeight="0.497552" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19178921" sideWeight="0.22626932" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32986537" sideWeight="0.6400911" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3996328" sideWeight="0.6400911" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23713236" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23590687" sideWeight="0.50341684" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53872436" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -689,7 +779,7 @@
     <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed references to SPray and other unneeded pieces." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixing application to shutdown correctly.&#10;Adding logging support (grizzled-slf4j).&#10;Adding slf4j." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -705,6 +795,7 @@
     <MESSAGE value="Commit" />
     <MESSAGE value="Renamed the project to the production name." />
     <MESSAGE value="Removed references to SPray and other unneeded pieces." />
+    <MESSAGE value="Fixing application to shutdown correctly.&#10;Adding logging support (grizzled-slf4j).&#10;Adding slf4j." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -714,11 +805,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/FirstActorWithLogging.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="23" selection-start="593" selection-end="593" vertical-scroll-proportion="0.5670103" />
-      </provider>
-    </entry>
     <entry file="jar:///opt/akka-2.1.0/src/akka/akka-actor_2.10-2.1.0-sources.jar!/akka/pattern/AskSupport.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="153" column="29" selection-start="6577" selection-end="6577" vertical-scroll-proportion="0.0" />
@@ -731,102 +817,99 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/application.conf">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="1" selection-start="26" selection-end="26" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="2" column="1" selection-start="26" selection-end="26" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="jar:///opt/akka-2.1.0/src/akka/akka-actor_2.10-2.1.0-sources.jar!/akka/event/Logging.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="364" column="36" selection-start="13622" selection-end="13622" vertical-scroll-proportion="3.6469429">
-          <folding />
-        </state>
+        <state line="364" column="36" selection-start="13622" selection-end="13622" vertical-scroll-proportion="3.6469429" />
       </provider>
     </entry>
     <entry file="jar:///opt/akka-2.1.0/src/akka/akka-actor_2.10-2.1.0-sources.jar!/akka/actor/ActorSystem.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="604" column="48" selection-start="23968" selection-end="23968" vertical-scroll-proportion="0.3326923">
-          <folding />
-        </state>
+        <state line="604" column="48" selection-start="23968" selection-end="23968" vertical-scroll-proportion="0.3326923" />
       </provider>
     </entry>
     <entry file="jar:///opt/akka-2.1.0/src/akka/akka-actor_2.10-2.1.0-sources.jar!/akka/actor/ActorRef.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="307" column="0" selection-start="10831" selection-end="10831" vertical-scroll-proportion="0.3326923">
-          <folding />
-        </state>
+        <state line="307" column="0" selection-start="10831" selection-end="10831" vertical-scroll-proportion="0.3326923" />
       </provider>
     </entry>
     <entry file="jar:///opt/akka-2.1.0/src/akka/akka-actor_2.10-2.1.0-sources.jar!/akka/actor/ActorCell.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="305" column="0" selection-start="9981" selection-end="9981" vertical-scroll-proportion="0.31977817">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/SessionService.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="17" selection-start="428" selection-end="428" vertical-scroll-proportion="0.22181146">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/model/Data.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="11" selection-start="165" selection-end="165" vertical-scroll-proportion="0.2495379">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/ServiceConstants.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="12" selection-start="217" selection-end="217" vertical-scroll-proportion="0.27726433">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/JSONContextResolver.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="0" selection-start="622" selection-end="622" vertical-scroll-proportion="0.52680224">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/SecondActor.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="2" selection-start="227" selection-end="227" vertical-scroll-proportion="0.27726433">
-          <folding />
-        </state>
+        <state line="305" column="0" selection-start="9981" selection-end="9981" vertical-scroll-proportion="0.31977817" />
       </provider>
     </entry>
     <entry file="jar:///opt/tomcat/lib/servlet-api.jar!/javax/servlet/ServletContextListener.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="17" selection-start="155" selection-end="155" vertical-scroll-proportion="-2.4">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/servlet/AkkaApplication.scala.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="25" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="5" column="17" selection-start="155" selection-end="155" vertical-scroll-proportion="-2.4" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web/WEB-INF/web.xml">
       <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleGeneralEditorProvider">
         <state />
       </provider>
-      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorReferencesProvider">
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorProvider">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="34" selection-start="1287" selection-end="1287" vertical-scroll-proportion="1.2244898">
+        <state line="18" column="24" selection-start="840" selection-end="840" vertical-scroll-proportion="0.64903843">
           <folding />
         </state>
       </provider>
-      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorProvider">
+      <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorReferencesProvider">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/servlet/AkkaApplication.scala.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="6" selection-start="213" selection-end="213" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/FirstActorWithLogging.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="6" selection-start="291" selection-end="291" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/model/Data.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="11" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/JSONContextResolver.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="0" selection-start="622" selection-end="622" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/ServiceConstants.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="12" selection-start="217" selection-end="217" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/akka/actors/SecondActor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="0" selection-start="183" selection-end="183" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lexaux/scala/rest/SessionService.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="68" selection-start="692" selection-end="692" vertical-scroll-proportion="0.9493671">
+          <folding>
+            <element signature="e#31#82#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
   </component>
