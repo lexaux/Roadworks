@@ -1,4 +1,4 @@
-package com.augmentari.roadworks.sensorlogger;
+package com.augmentari.roadworks.sensorlogger.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

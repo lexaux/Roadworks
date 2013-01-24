@@ -1,4 +1,4 @@
-package com.augmentari.roadworks.sensorlogger;
+package com.augmentari.roadworks.sensorlogger.activity;
 
 import android.app.ListActivity;
 import android.app.LoaderManager;
@@ -13,8 +13,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.dao.SQLiteHelperImpl;
+import com.augmentari.roadworks.sensorlogger.dao.SimpleCursorLoader;
 import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 
 /**

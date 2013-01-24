@@ -6,19 +6,19 @@
     <uses-sdk android:minSdkVersion="15"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".activity.MainActivity"
                   android:label="@string/mainActivityName">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SessionListActivity" android:label="@string/sessionListActivityName"/>
-        <activity android:name=".PrefActivity" android:label="@string/prefActivity"/>
+        <activity android:name=".activity.SessionListActivity" android:label="@string/sessionListActivityName"/>
+        <activity android:name=".activity.PrefActivity" android:label="@string/prefActivity"/>
 
-        <service android:exported="false" android:name=".SensorLoggerService"/>
+        <service android:exported="false" android:name=".service.SensorLoggerService"/>
 
-        <receiver android:name=".SystemEventReceiver">
+        <receiver android:name=".receiver.SystemEventReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>

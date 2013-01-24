@@ -1,4 +1,4 @@
-package com.augmentari.roadworks.sensorlogger;
+package com.augmentari.roadworks.sensorlogger.activity;
 
 import android.app.Activity;
 import android.content.*;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.augmentari.roadworks.sensorlogger.R;
+import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 

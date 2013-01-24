@@ -1,4 +1,4 @@
-package com.augmentari.roadworks.sensorlogger;
+package com.augmentari.roadworks.sensorlogger.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
+import com.augmentari.roadworks.sensorlogger.activity.MainActivity;
+import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;

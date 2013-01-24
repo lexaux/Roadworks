@@ -1,11 +1,11 @@
-package com.augmentari.roadworks.sensorlogger;
+package com.augmentari.roadworks.sensorlogger.activity;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+import com.augmentari.roadworks.sensorlogger.activity.PrefActivity;
 import com.augmentari.roadworks.sensorlogger.net.ssl.NetworkingFactory;
-import com.augmentari.roadworks.sensorlogger.net.ssl.NetworkingException;
 
 import java.io.IOException;
 import java.io.InputStream;

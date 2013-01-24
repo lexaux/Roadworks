@@ -1,4 +1,4 @@
-package com.augmentari.roadworks.sensorlogger;
+package com.augmentari.roadworks.sensorlogger.dao;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
