@@ -17,6 +17,7 @@
         <activity android:name=".activity.PrefActivity" android:label="@string/prefActivity"/>
 
         <service android:exported="false" android:name=".service.SensorLoggerService"/>
+        <service android:exported="false" android:name=".service.DataUploaderService"/>
 
         <receiver android:name=".receiver.SystemEventReceiver">
             <intent-filter>

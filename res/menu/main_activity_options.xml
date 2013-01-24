@@ -4,13 +4,15 @@
     <item android:id="@+id/showSessionList"
           android:icon="@android:drawable/ic_menu_more"
           android:title="@string/showSessionList"
-          android:showAsAction="ifRoom"/>
+          android:showAsAction="always"/>
 
     <item android:id="@+id/settingsMenu"
           android:icon="@android:drawable/ic_menu_preferences"
-          android:title="@string/prefActivity"/>
+          android:title="@string/prefActivity"
+          android:showAsAction="never"/>
 
-    <item android:id="@+id/testNetworking"
-          android:icon="@android:drawable/ic_menu_add"
-          android:title="@string/testNetworking"/>
+    <item android:id="@+id/manualUploadData"
+          android:title="@string/manualUploadData"
+          android:showAsAction="never"/>
+
 </menu>

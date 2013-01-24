@@ -23,6 +23,7 @@ import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
+import com.augmentari.roadworks.sensorlogger.util.Notifications;
 
 import java.io.*;
 import java.text.MessageFormat;
@@ -38,9 +39,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     private boolean isStarted = false;
     // size of the buffer for the file stream; .5M for a start
     public static final int BUFFER_SIZE = 128 * 1024;
-
-    // how often to send broadcast event to update interface (for isnstance)
-    public static final int ONGOING_NOTIFICATION = 1;
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -62,8 +60,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     // is releaserd when the service is actually stopped. As this wake lock is a PARTIAL one, screen may go off but the
     // processor should remain running in the background
     private PowerManager.WakeLock wakeLock = null;
-
-    public static final String TIME_FORMAT = "hh:mm:ss";
 
     private RecordingSession currentSession;
 
@@ -91,16 +87,16 @@ public class SensorLoggerService extends Service implements SensorEventListener,
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         Notification notification = new Notification.Builder(this)
-                .setTicker(getString(R.string.serviceNotificationTicker))
-                .setContentTitle(getString(R.string.serviceNotificationTitle))
-                .setContentText(getString(R.string.serviceNotificationText))
+                .setTicker(getString(R.string.sensor_logger_service_notification_ticker))
+                .setContentTitle(getString(R.string.notification_ongoing_title))
+                .setContentText(getString(R.string.sensor_logger_service_notification_text))
                 .setSmallIcon(R.drawable.ic_stat_logger_notification)
                 .setWhen(System.currentTimeMillis())
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .getNotification();
 
-        startForeground(ONGOING_NOTIFICATION, notification);
+        startForeground(Notifications.ONGOING_NOTIFICATION, notification);
 
         if (accelerometer == null) {
             try {

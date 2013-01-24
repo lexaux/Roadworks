@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.augmentari.roadworks.sensorlogger.R;
+import com.augmentari.roadworks.sensorlogger.service.DataUploaderService;
 import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
@@ -178,7 +179,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_activity_options, menu);
         return true;
     }
 
@@ -195,8 +196,9 @@ public class MainActivity extends Activity {
                 startActivity(settingsActivityIntent);
                 break;
 
-            case R.id.testNetworking:
-                new TestNetworkingTask(this).execute();
+            case R.id.manualUploadData:
+                Intent startUploadDataService = new Intent(this, DataUploaderService.class);
+                startService(startUploadDataService);
                 break;
         }
         return true;
