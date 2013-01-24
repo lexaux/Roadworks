@@ -76,6 +76,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         recordingSessionDAO = new RecordingSessionDAO(this);
+
         super.onCreate();
     }
 
@@ -234,10 +235,5 @@ public class SensorLoggerService extends Service implements SensorEventListener,
         public long getStatementsLogged() {
             return statementsLogged;
         }
-
-        public SensorLoggerService getService() {
-            return SensorLoggerService.this;
-        }
-
     }
 }
