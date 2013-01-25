@@ -4,14 +4,13 @@ import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
@@ -26,6 +25,24 @@ public class SessionListActivity extends ListActivity implements LoaderManager.L
 
     // This is the Adapter being used to display the list's data
     SimpleCursorAdapter mAdapter;
+
+    @Override
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.session_list_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.showControlScreen:
+                Intent showResultsList = new Intent(this, MainActivity.class);
+                startActivity(showResultsList);
+                break;
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +118,8 @@ public class SessionListActivity extends ListActivity implements LoaderManager.L
         // Prepare the loader.  Either re-connect with an existing one,
         // or start a new one.
         getLoaderManager().initLoader(0, null, this);
+
+
     }
 
     // Called when a new Loader needs to be created
@@ -177,5 +196,7 @@ class SessionListLoader extends SimpleCursorLoader {
                 false);
         super.onStartLoading();
     }
+
+
 }
 
