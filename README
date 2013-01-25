@@ -1,1 +1,8 @@
-This file was created by IntelliJ IDEA 11.1.4 for binding GitHub repository
+Roadworks SensorLogger Android application
+
+This is a mobile client application, doing 2 maing things:
+ * When the user is driving, and has this app enabled, it collects accelerometer,
+   GPS and other sensor readings, processes them and sends to server.
+ * It allows looking at the map to determine surface quality, individual potholes etc.
+
+ Please check settings.
