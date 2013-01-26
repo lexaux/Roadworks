@@ -7,9 +7,9 @@ import slick.session.Database
 import javax.servlet.{ServletContextEvent, ServletContextListener}
 
 // Use H2Driver to connect to an H2 database
-import scala.slick.driver.H2Driver.simple._
 
 // Use the implicit threadLocalSession
+
 import Database.threadLocalSession
 
 class AkkaServletContextListener extends ServletContextListener with Logging {
@@ -31,7 +31,8 @@ class AkkaServletContextListener extends ServletContextListener with Logging {
 
   def testDB() {
     Database.forURL("jdbc://postgresql/localhost/slicktest", "user", "password", driver = "org.postgresql.Driver") withSession {
-      (Suppliers.ddl ++ Customers.ddl).
+      (Suppliers.ddl ++ Customers.ddl).create
+
     }
   }
 
