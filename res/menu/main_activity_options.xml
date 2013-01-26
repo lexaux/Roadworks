@@ -15,4 +15,8 @@
           android:title="@string/manualUploadData"
           android:showAsAction="never"/>
 
+    <item android:id="@+id/testBugSense"
+          android:title="Test BugSense"
+          android:showAsAction="never"/>
+
 </menu>

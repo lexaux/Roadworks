@@ -21,6 +21,7 @@ public class RecordingSession {
         UPLOADED,
         FAILED
     }
+
     private long id;
 
     private Date startTime;

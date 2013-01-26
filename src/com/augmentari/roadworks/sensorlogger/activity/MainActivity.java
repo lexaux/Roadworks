@@ -1,9 +1,15 @@
 package com.augmentari.roadworks.sensorlogger.activity;
 
 import android.app.Activity;
-import android.content.*;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +21,9 @@ import com.augmentari.roadworks.sensorlogger.service.DataUploaderService;
 import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
+import com.bugsense.trace.BugSenseHandler;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -111,6 +119,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense_api_key));
 
         setContentView(R.layout.main);
         serviceControlButton = (Button) findViewById(R.id.serviceControlButton);
@@ -199,6 +208,12 @@ public class MainActivity extends Activity {
             case R.id.manualUploadData:
                 Intent startUploadDataService = new Intent(this, DataUploaderService.class);
                 startService(startUploadDataService);
+                break;
+
+            case R.id.testBugSense:
+                if (0 < new Random(System.currentTimeMillis()).nextDouble()) {
+                    throw new RuntimeException("test test");
+                }
                 break;
         }
         return true;

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bugsense_api_key">3c2c9938</string>
+
     <string name="app_name">Roadworks.SensorLogger</string>
 
     <string name="loading_title">Loading data</string>
