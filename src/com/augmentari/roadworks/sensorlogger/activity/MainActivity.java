@@ -210,11 +210,6 @@ public class MainActivity extends Activity {
                 startService(startUploadDataService);
                 break;
 
-            case R.id.testBugSense:
-                if (0 < new Random(System.currentTimeMillis()).nextDouble()) {
-                    throw new RuntimeException("test test");
-                }
-                break;
         }
         return true;
     }
