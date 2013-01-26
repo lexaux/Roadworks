@@ -1,6 +1,6 @@
 package com.lexaux.scala.akka.servlet
 
-import scala.slick.driver.PostgresDriver._
+import scala.slick.driver.PostgresDriver.simple._
 import akka.actor.ActorSystem
 import grizzled.slf4j.Logging
 import slick.session.Database
@@ -30,13 +30,12 @@ class AkkaServletContextListener extends ServletContextListener with Logging {
   }
 
   def testDB() {
-    Database.forURL("jdbc://postgresql/localhost/slicktest", "user", "password", driver = "org.postgresql.Driver") withSession {
+    Database.forURL("jdbc:postgresql://localhost/slicktest", "user", "password", driver = "org.postgresql.Driver") withSession {
       (Suppliers.ddl ++ Customers.ddl).create
-
     }
   }
 
-  testDB()
+//  testDB()
 
   def contextDestroyed(p1: ServletContextEvent) {
     info("Hello! Staring the demolition.")
