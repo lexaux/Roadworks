@@ -1,4 +1,4 @@
-package com.lexaux.scala.rest
+package com.augmentari.roadworks.rest.rest
 
 import akka.util.Timeout
 import java.util.concurrent.TimeUnit

@@ -1,8 +1,8 @@
-package com.lexaux.scala.akka.actors
+package com.augmentari.roadworks.rest.akka.actors
 
 import akka.event.Logging
 import akka.actor.Actor
-import com.lexaux.scala.model.Data
+import com.augmentari.roadworks.rest.model.Data
 
 /**
  * Another actor.

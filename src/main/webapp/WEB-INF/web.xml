@@ -16,8 +16,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
             <param-value>
-                com.lexaux.scala.rest
-                com.lexaux.java.rest
+                com.augmentari.roadworks.rest.rest
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
@@ -28,6 +27,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     </servlet-mapping>
 
     <listener>
-        <listener-class>com.lexaux.scala.akka.servlet.AkkaServletContextListener</listener-class>
+        <listener-class>com.augmentari.roadworks.rest.akka.servlet.AkkaServletContextListener</listener-class>
     </listener>
 </web-app>

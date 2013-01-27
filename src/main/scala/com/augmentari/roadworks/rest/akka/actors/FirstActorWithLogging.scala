@@ -1,4 +1,4 @@
-package com.lexaux.scala.akka.actors
+package com.augmentari.roadworks.rest.akka.actors
 
 import akka.actor.{Props, Actor}
 import akka.event.Logging

@@ -1,10 +1,10 @@
-package com.lexaux.scala.rest
+package com.augmentari.roadworks.rest.rest
 
 import javax.ws.rs.ext.{Provider, ContextResolver}
 import javax.xml.bind.JAXBContext
-import com.lexaux.scala.model.Data
 import com.sun.jersey.api.json.{JSONConfiguration, JSONJAXBContext}
 import javax.ws.rs.Produces
+import com.augmentari.roadworks.rest.model.Data
 
 /**
  * JSON serialization provider.

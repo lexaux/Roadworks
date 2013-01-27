@@ -1,4 +1,4 @@
-package com.lexaux.scala.akka.servlet
+package com.augmentari.roadworks.rest.akka.servlet
 
 import scala.slick.driver.PostgresDriver.simple._
 import akka.actor.ActorSystem
@@ -35,7 +35,7 @@ class AkkaServletContextListener extends ServletContextListener with Logging {
     }
   }
 
-//  testDB()
+  //  testDB()
 
   def contextDestroyed(p1: ServletContextEvent) {
     info("Hello! Staring the demolition.")

@@ -1,4 +1,4 @@
-package com.lexaux.scala.model
+package com.augmentari.roadworks.rest.model
 
 import javax.xml.bind.annotation.{XmlElement, XmlRootElement}
 
