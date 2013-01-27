@@ -6,9 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * DAO class to manipulate the Recording sessions. We store all the meta-data in the database, and only raw data file
@@ -27,6 +30,11 @@ public class RecordingSessionDAO {
     public void open() {
         database = dbHelper.getWritableDatabase();
     }
+
+    public void openRead() {
+        database = dbHelper.getReadableDatabase();
+    }
+
 
     public void close() {
         dbHelper.close();
@@ -105,6 +113,42 @@ public class RecordingSessionDAO {
                 SQLiteHelperImpl.FIELD_ID + " DESC");
     }
 
+    public List<RecordingSession> getRecordingSessionsToUpload() {
+        Cursor cursor = database.query(
+                SQLiteHelperImpl.TABLE_SESSIONS,
+                SQLiteHelperImpl.ALL_COLUMNS,
+                SQLiteHelperImpl.FIELD_STATE + " = '" + RecordingSession.State.LOGGED.name() + "'",
+                null, null, null, null);
+        List<RecordingSession> recordingSessions = new ArrayList<RecordingSession>();
+        while (cursor.moveToNext()) {
+            recordingSessions.add(cursorToSession(cursor));
+        }
+        cursor.close();
+
+        return recordingSessions;
+    }
+
+    public void markUploaded(long[] ids) {
+        ContentValues cv = new ContentValues();
+        cv.put(SQLiteHelperImpl.FIELD_STATE, RecordingSession.State.UPLOADED.name());
+        if (ids == null || ids.length == 0) {
+            return; // no data to update.
+        }
+
+        StringBuilder idsString = new StringBuilder(Long.toString(ids[0])); // no issue - see check above.
+        for (int i = 1; i < ids.length; i++) {
+            //starting from the second
+            idsString.append(",").append(ids[i]);
+        }
+
+        database.update(
+                SQLiteHelperImpl.TABLE_SESSIONS,
+                cv,
+                SQLiteHelperImpl.FIELD_ID + " in (" + idsString.toString() + ") ",
+                null);
+
+    }
+
     private RecordingSession cursorToSession(Cursor cursor) {
         RecordingSession sess = new RecordingSession();
 
@@ -116,5 +160,15 @@ public class RecordingSessionDAO {
         sess.setEventsLogged(cursor.getLong(5));
 
         return sess;
+    }
+
+    public static JSONObject sessionToJSONObject(RecordingSession session) throws JSONException {
+        JSONObject object = new JSONObject();
+        object.put(SQLiteHelperImpl.FIELD_ID, session.getId());
+        object.put(SQLiteHelperImpl.FIELD_START_TIME, session.getStartTime());
+        object.put(SQLiteHelperImpl.FIELD_END_TIME, session.getEndTime());
+        object.put(SQLiteHelperImpl.FIELD_EVENTS_LOGGED_COUNT, session.getEventsLogged());
+
+        return object;
     }
 }

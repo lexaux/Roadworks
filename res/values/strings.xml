@@ -38,9 +38,7 @@
     <string name="sensor_logger_service_notification_ticker">Recording started</string>
     <string name="sensor_logger_service_notification_text">Recording sensor data for road qaulity assessment</string>
     <string name="data_upload_service_success_ticker">Roadworks - successfully uploaded data!</string>
-    <string name="data_upload_service_success_text">Uploaded total of X sessions, Y bytes. Click here to change
-        settings.
-    </string>
+    <string name="data_upload_service_success_text">Uploaded %1$d sessions.</string>
     <string name="data_upload_service_fail_ticker">Roadworks - data upload failed</string>
     <string name="data_upload_service_fail_text">Data upload failed. Try retrying later?</string>
 

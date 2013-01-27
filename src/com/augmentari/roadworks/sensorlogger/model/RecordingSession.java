@@ -17,7 +17,6 @@ public class RecordingSession {
         LOGGED,
         PROCESSING,
         PROCESSED,
-        UPLOADING,
         UPLOADED,
         FAILED
     }

@@ -105,7 +105,6 @@ public class SessionListActivity extends ListActivity implements LoaderManager.L
                         break;
 
                     case UPLOADED:
-                    case UPLOADING:
                         color = Color.GREEN;
                         break;
                 }

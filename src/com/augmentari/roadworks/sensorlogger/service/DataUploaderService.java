@@ -13,13 +13,20 @@ import android.widget.Toast;
 import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.activity.PrefActivity;
 import com.augmentari.roadworks.sensorlogger.activity.SessionListActivity;
+import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
+import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.net.ssl.NetworkingFactory;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 import com.augmentari.roadworks.sensorlogger.util.Notifications;
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -59,6 +66,7 @@ public class DataUploaderService extends Service {
     private class DataUploadTask extends AsyncTask<Void, Integer, Void> {
         private Exception ex = null;
         private final int serviceStartId;
+        private int sessionsUploaded = 0;
 
         public DataUploadTask(int serviceStartId) {
             this.serviceStartId = serviceStartId;
@@ -66,30 +74,67 @@ public class DataUploaderService extends Service {
 
         @Override
         protected Void doInBackground(Void... params) {
-            //TODO: implement actual upload logic.
-            // get Logged and processed data ready to be sent
-            // get Set of IDs for them
-            // marshal all of them to JSON
-            // upload data using NetowrkingFactory via ssl, using endpoints.
-            // update the SQL with the given IDs (set).
             ex = null;
             InputStream is = null;
+            OutputStream os = null;
             HttpURLConnection connection = null;
+            RecordingSessionDAO dao = null;
 
             try {
                 Context context = DataUploaderService.this;
-                String realUrl = PreferenceManager.getDefaultSharedPreferences(context).getString(PrefActivity.KEY_PREF_API_BASE_URL, "") + "api/helloworld/2";
+                String realUrl = PreferenceManager.getDefaultSharedPreferences(context).getString(PrefActivity.KEY_PREF_API_BASE_URL, "") + "api/helloworld";
                 connection = NetworkingFactory.openConnection(realUrl, context);
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+
+                List<RecordingSession> sessionList = new ArrayList<RecordingSession>(Arrays.asList(new RecordingSession(), new RecordingSession()));
+
+                dao = new RecordingSessionDAO(DataUploaderService.this);
+                dao.openRead();
+                JSONArray jsonArray = new JSONArray();
+
+
+                List<RecordingSession> sessions = dao.getRecordingSessionsToUpload();
+                long[] ids = new long[sessions.size()];
+                int idIdx = 0;
+                for (RecordingSession session : sessions) {
+                    jsonArray.put(RecordingSessionDAO.sessionToJSONObject(session));
+                    ids[idIdx++] = session.getId();
+                }
+
+                byte[] jsonString = jsonArray.toString().getBytes();
+                connection.setRequestProperty("Content-Length", Integer.toString(jsonString.length));
+
+                os = connection.getOutputStream();
+                os.write(jsonString);
+
                 is = connection.getInputStream();
-                // enough to check networking this way.
+
+                dao.markUploaded(ids);
+                sessionsUploaded = ids.length;
+                dao.close();
             } catch (Exception e) {
                 ex = e;
                 e.printStackTrace();
                 Log.e("Error in DataUploadTask (async): " + e.getMessage() + " " + e.getClass());
             } finally {
+                if (dao != null) {
+                    try {
+                        dao.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 if (is != null) {
                     try {
                         is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (os != null) {
+                    try {
+                        os.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -104,15 +149,23 @@ public class DataUploaderService extends Service {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            NotificationManager notificationManager = (NotificationManager) DataUploaderService.this.getSystemService(NOTIFICATION_SERVICE);
 
+            stopSelf(serviceStartId);
+            isDataUploadRunning.set(false);
+
+            if (ex == null && sessionsUploaded == 0) {
+                //No need for a notification - no real job done.
+                return;
+            }
+
+            //notificaton stuff
+            NotificationManager notificationManager = (NotificationManager) DataUploaderService.this.getSystemService(NOTIFICATION_SERVICE);
             int title = R.string.notification_title;
             String text;
             int ticker;
             Class activityClassToOpen;
-            if (ex == null) {
-                //TODO: do not show notification and do nothing actually if no data was transferred (no new data logged)
-                text = getString(R.string.data_upload_service_success_text);
+            if (ex == null && sessionsUploaded > 0) {
+                text = String.format(getString(R.string.data_upload_service_success_text), sessionsUploaded);
                 ticker = R.string.data_upload_service_success_ticker;
                 activityClassToOpen = SessionListActivity.class;
             } else {
@@ -133,9 +186,6 @@ public class DataUploaderService extends Service {
                     .setContentIntent(pendingIntent)
                     .getNotification();
             notificationManager.notify(Notifications.DATA_UPLOADER_NOTIFICATION, notification);
-
-            stopSelf(serviceStartId);
-            isDataUploadRunning.set(false);
         }
     }
 }
