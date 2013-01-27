@@ -25,7 +25,7 @@ public class SystemEventReceiver extends BroadcastReceiver {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-            if (activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            if (activeNetInfo != null && activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 //TODO: Check for preferences
                 Intent startUploadDataService = new Intent(context, DataUploaderService.class);
                 context.startService(startUploadDataService);

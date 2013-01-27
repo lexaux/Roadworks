@@ -44,7 +44,6 @@ public class DataUploaderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!isDataUploadRunning.compareAndSet(false, true)) {
-            Toast.makeText(this, "Data upload already running! Please wait for notification soon.", Toast.LENGTH_SHORT).show();
             stopSelf();
         }
         DataUploadTask task = new DataUploadTask(startId);

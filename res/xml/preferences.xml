@@ -4,5 +4,5 @@
     <EditTextPreference
             android:key="pref_api_base_url"
             android:title="@string/pref_api_base_url_title"
-            android:defaultValue="http://46.4.224.49/"/>
+            android:defaultValue="https://46.4.224.49/"/>
 </PreferenceScreen>
