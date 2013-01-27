@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   "org.clapper" % "grizzled-slf4j_2.10" % "1.0.1",
   "postgresql" % "postgresql" % "9.1-901.jdbc4",
   "com.sun.jersey" % "jersey-server" % "1.16",
+  "com.sun.jersey" % "jersey-core" % "1.16",
   "com.sun.jersey" % "jersey-json" % "1.16",
   "com.sun.jersey" % "jersey-servlet" % "1.16",
   "com.typesafe.akka" %% "akka-actor" % "2.1.0",
