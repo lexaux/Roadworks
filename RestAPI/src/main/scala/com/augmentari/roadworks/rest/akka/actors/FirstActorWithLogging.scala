@@ -12,16 +12,14 @@ import java.util.concurrent.TimeUnit
  * The first actor to try.
  * Should be invoked from where?
  */
-class FirstActorWithLogging extends Actor {
-  val log = Logging(context.system, this)
-
+class FirstActorWithLogging extends Actor with grizzled.slf4j.Logging {
   def receive = {
     case "Ping" => {
       implicit val timeout = Timeout(4, TimeUnit.SECONDS)
-      log.info("received Ping")
+      info("received Ping")
     }
-    case "Pong" => log.info("PONG")
+    case "Pong" => info("PONG")
 
-    case _ => log.info("received unknown")
+    case _ => info("received unknown")
   }
 }

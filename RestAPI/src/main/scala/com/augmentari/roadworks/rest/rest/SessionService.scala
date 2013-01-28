@@ -6,6 +6,7 @@ import akka.actor.Props
 import concurrent.Await
 import com.augmentari.roadworks.rest.akka.servlet.AkkaApplication
 import com.augmentari.roadworks.rest.akka.actors.{TestMessage, SecondActor}
+import com.augmentari.roadworks.model.RecordingSession
 
 /**
  * Sample REST service.
