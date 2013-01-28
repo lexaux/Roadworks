@@ -30,12 +30,12 @@ class AkkaServletContextListener extends ServletContextListener with Logging {
   }
 
   def testDB() {
-    Database.forURL("jdbc:postgresql://localhost/slicktest", "user", "password", driver = "org.postgresql.Driver") withSession {
+    Database.forURL("jdbc:postgresql://localhost/slicktest", "username", "password", driver = "org.postgresql.Driver") withSession {
       (Suppliers.ddl ++ Customers.ddl).create
     }
   }
 
-  //  testDB()
+  testDB()
 
   def contextDestroyed(p1: ServletContextEvent) {
     info("Hello! Staring the demolition.")
