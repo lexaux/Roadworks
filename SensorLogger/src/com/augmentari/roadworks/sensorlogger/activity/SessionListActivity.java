@@ -12,11 +12,11 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.*;
 import android.widget.*;
+import com.augmentari.roadworks.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.dao.SQLiteHelperImpl;
 import com.augmentari.roadworks.sensorlogger.dao.SimpleCursorLoader;
-import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
 
 /**
  * Activity showing a list of the sessions with their info (status, kilometers logged etc).

@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.augmentari.roadworks.sensorlogger.model.RecordingSession;
+import com.augmentari.roadworks.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import org.json.JSONException;
 import org.json.JSONObject;

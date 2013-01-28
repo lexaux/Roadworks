@@ -1,4 +1,4 @@
-package com.augmentari.roadworks.sensorlogger.model;
+package com.augmentari.roadworks.model;
 
 import java.util.Date;
 
