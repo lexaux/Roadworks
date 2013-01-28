@@ -25,7 +25,9 @@ class SessionService extends ServiceConstants {
   }
 
   @POST
-  def postObjects() = {
+  @Consumes(Array("application/json"))
+  @Produces(Array("application/json"))
+  def postObjects(recordingSessions: Array[RecordingSession]): Unit = {
     val actor = AkkaApplication.getSystem.actorOf(Props[SecondActor])
     val future = actor ? TestMessage(0)
     Await.result(future, timeout.duration)

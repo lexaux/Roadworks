@@ -101,6 +101,9 @@ public class DataUploaderService extends Service {
                 }
 
                 byte[] jsonString = jsonArray.toString().getBytes();
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Accept", "application/json");
+//                jsonString = "[]".getBytes();
                 connection.setRequestProperty("Content-Length", Integer.toString(jsonString.length));
 
                 os = connection.getOutputStream();

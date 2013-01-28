@@ -1,6 +1,9 @@
 package com.augmentari.roadworks.sensorlogger.util;
 
+import android.text.format.DateFormat;
+
 import java.text.DecimalFormat;
+import java.util.Date;
 
 /**
  * Format short-hand for various used strings.
@@ -30,6 +33,17 @@ public class Formats {
         int digitGroups = (int) (Math.log10(value) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(value / Math.pow(1024, digitGroups)) + " " + prefixes[digitGroups];
 
+    }
+
+    /**
+     * Date format used in JSON implementation.
+     *
+     * @param date date to process
+     * @return
+     */
+    public static CharSequence formatJsonDate(Date date) {
+        // trick here -- Android is different from 'Big java',hh (android)=HH(big java).hh=kk though.
+        return DateFormat.format("EEE, dd MMM yyyy hh:mm:ss zzz", date);
     }
 
     public static DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");

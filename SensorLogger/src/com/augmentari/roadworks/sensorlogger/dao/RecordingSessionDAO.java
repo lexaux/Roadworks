@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.format.DateFormat;
 import com.augmentari.roadworks.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import org.json.JSONException;
@@ -164,10 +165,10 @@ public class RecordingSessionDAO {
 
     public static JSONObject sessionToJSONObject(RecordingSession session) throws JSONException {
         JSONObject object = new JSONObject();
-        object.put(SQLiteHelperImpl.FIELD_ID, session.getId());
-        object.put(SQLiteHelperImpl.FIELD_START_TIME, session.getStartTime());
-        object.put(SQLiteHelperImpl.FIELD_END_TIME, session.getEndTime());
-        object.put(SQLiteHelperImpl.FIELD_EVENTS_LOGGED_COUNT, session.getEventsLogged());
+        object.put("id", session.getId());
+        object.put("startTime", Formats.formatJsonDate(session.getStartTime()));
+        object.put("endTime", Formats.formatJsonDate(session.getEndTime()));
+        object.put("eventsLogged", session.getEventsLogged());
 
         return object;
     }
