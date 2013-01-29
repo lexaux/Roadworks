@@ -16,11 +16,10 @@ import com.augmentari.roadworks.sensorlogger.activity.SessionListActivity;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.net.ssl.NetworkingFactory;
 import com.augmentari.roadworks.sensorlogger.util.CloseUtils;
+import com.augmentari.roadworks.sensorlogger.util.Constants;
 import com.augmentari.roadworks.sensorlogger.util.Log;
-import com.augmentari.roadworks.sensorlogger.util.Notifications;
 import org.json.JSONArray;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -166,7 +165,7 @@ public class DataUploaderService extends Service {
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
                     .getNotification();
-            notificationManager.notify(Notifications.DATA_UPLOADER_NOTIFICATION, notification);
+            notificationManager.notify(Constants.DATA_UPLOADER_NOTIFICATION, notification);
         }
     }
 }

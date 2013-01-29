@@ -22,9 +22,9 @@ import com.augmentari.roadworks.sensorlogger.activity.MainActivity;
 import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.util.CloseUtils;
+import com.augmentari.roadworks.sensorlogger.util.Constants;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
-import com.augmentari.roadworks.sensorlogger.util.Notifications;
 
 import java.io.*;
 import java.text.MessageFormat;
@@ -97,7 +97,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
                 .setOngoing(true)
                 .getNotification();
 
-        startForeground(Notifications.ONGOING_NOTIFICATION, notification);
+        startForeground(Constants.ONGOING_NOTIFICATION, notification);
 
         if (accelerometer == null) {
             try {
