@@ -21,6 +21,7 @@ import com.augmentari.roadworks.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.activity.MainActivity;
 import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
+import com.augmentari.roadworks.sensorlogger.util.CloseUtils;
 import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 import com.augmentari.roadworks.sensorlogger.util.Notifications;
@@ -114,13 +115,7 @@ public class SensorLoggerService extends Service implements SensorEventListener,
                 fileResultsWriter = new PrintWriter(new OutputStreamWriter(bufferedOutputStream));
                 writeHeading();
             } catch (FileNotFoundException e) {
-                if (outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                }
+                CloseUtils.closeStream(outputStream);
                 throw new RuntimeException(e);
             }
 
@@ -154,15 +149,13 @@ public class SensorLoggerService extends Service implements SensorEventListener,
         if (wakeLock != null) {
             wakeLock.release();
         }
-        if (fileResultsWriter != null) {
-            fileResultsWriter.close();
-        }
+        CloseUtils.closeStream(fileResultsWriter);
 
         locationManager.removeUpdates(this);
 
         recordingSessionDAO.open();
         recordingSessionDAO.finishSession(currentSession.getId(), statementsLogged, new Date());
-        recordingSessionDAO.close();
+        CloseUtils.closeDao(recordingSessionDAO);
 
         Toast.makeText(
                 this,

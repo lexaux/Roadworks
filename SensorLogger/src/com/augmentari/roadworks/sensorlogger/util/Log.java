@@ -13,6 +13,11 @@ public class Log {
         android.util.Log.e(TAG, message);
     }
 
+    public static void e(String message, Throwable tr) {
+        android.util.Log.e(TAG, message, tr);
+    }
+
+
     public static void w(String message) {
         android.util.Log.w(TAG, message);
     }

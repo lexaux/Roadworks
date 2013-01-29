@@ -15,6 +15,7 @@ import com.augmentari.roadworks.sensorlogger.activity.PrefActivity;
 import com.augmentari.roadworks.sensorlogger.activity.SessionListActivity;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.net.ssl.NetworkingFactory;
+import com.augmentari.roadworks.sensorlogger.util.CloseUtils;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 import com.augmentari.roadworks.sensorlogger.util.Notifications;
 import org.json.JSONArray;
@@ -103,7 +104,6 @@ public class DataUploaderService extends Service {
                 byte[] jsonString = jsonArray.toString().getBytes();
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("Accept", "application/json");
-//                jsonString = "[]".getBytes();
                 connection.setRequestProperty("Content-Length", Integer.toString(jsonString.length));
 
                 os = connection.getOutputStream();
@@ -119,30 +119,10 @@ public class DataUploaderService extends Service {
                 e.printStackTrace();
                 Log.e("Error in DataUploadTask (async): " + e.getMessage() + " " + e.getClass());
             } finally {
-                if (dao != null) {
-                    try {
-                        dao.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (os != null) {
-                    try {
-                        os.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (connection != null) {
-                    connection.disconnect();
-                }
+                CloseUtils.closeDao(dao);
+                CloseUtils.closeStream(is);
+                CloseUtils.closeStream(os);
+                CloseUtils.closeConnection(connection);
             }
             return null;
         }
