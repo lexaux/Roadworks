@@ -6,51 +6,32 @@ import grizzled.slf4j.Logging
 import slick.session.Database
 import javax.servlet.{ServletContextEvent, ServletContextListener}
 
-// Use H2Driver to connect to an H2 database
-
-// Use the implicit threadLocalSession
-
 import Database.threadLocalSession
+import com.augmentari.roadworks.rest.akka.db.RecordingSessions
 
 class AkkaServletContextListener extends ServletContextListener with Logging {
 
-  /**
-   * Akka application setup here.
-   */
-  object Suppliers extends Table[(Int)]("SUPPLIERS") {
-    def id = column[Int]("SUP_ID", O.PrimaryKey)
 
-    def * = id //~ name ~ street ~ city ~ state ~ zip
-  }
-
-  object Customers extends Table[(Int)]("CUSTOMERS") {
-    def id = column[Int]("SUP_ID", O.PrimaryKey)
-
-    def * = id //~ name ~ street ~ city ~ state ~ zip
-  }
-
-  def testDB() {
+  def createDB() {
     Database.forURL("jdbc:postgresql://localhost/slicktest", "username", "password", driver = "org.postgresql.Driver") withSession {
-      (Suppliers.ddl ++ Customers.ddl).create
+      RecordingSessions.ddl.create
     }
   }
 
-  testDB()
+  createDB()
 
   def contextDestroyed(p1: ServletContextEvent) {
-    info("Hello! Staring the demolition.")
-    AkkaApplication.actorSystem.shutdown()
-    AkkaApplication.actorSystem.awaitTermination()
-    info("Hello! Destroyed.")
+    AkkaApp.actorSystem.shutdown()
+    AkkaApp.actorSystem.awaitTermination()
   }
 
   def contextInitialized(p1: ServletContextEvent) {
-    AkkaApplication.actorSystem = ActorSystem("RestAkkaApplication")
-    info("Hello! Created.")
+    AkkaApp.actorSystem = ActorSystem("RestAkkaApplication")
   }
 }
 
-object AkkaApplication {
+object AkkaApp {
+  def apply(): ActorSystem = getSystem
 
   protected[servlet] var actorSystem: ActorSystem = null
 

@@ -1,11 +1,9 @@
 package com.augmentari.roadworks.rest.rest
 
 import javax.ws.rs._
-import akka.pattern.ask
 import akka.actor.Props
-import concurrent.Await
-import com.augmentari.roadworks.rest.akka.servlet.AkkaApplication
-import com.augmentari.roadworks.rest.akka.actors.{TestMessage, SecondActor}
+import com.augmentari.roadworks.rest.akka.servlet.AkkaApp
+import com.augmentari.roadworks.rest.akka.actors.{SessionsReceived, SecondActor}
 import com.augmentari.roadworks.model.RecordingSession
 
 /**
@@ -19,17 +17,13 @@ class SessionService extends ServiceConstants {
   @GET
   @Path("{id}")
   def getObjectById(@PathParam("id") id: String) = {
-    val actor = AkkaApplication.getSystem.actorOf(Props[SecondActor])
-    val future = actor ? TestMessage(augmentString(id).toInt)
-    Await.result(future, timeout.duration)
+    "Hello!"
   }
 
   @POST
   @Consumes(Array("application/json"))
   @Produces(Array("application/json"))
-  def postObjects(recordingSessions: Array[RecordingSession]): Unit = {
-    val actor = AkkaApplication.getSystem.actorOf(Props[SecondActor])
-    val future = actor ? TestMessage(0)
-    Await.result(future, timeout.duration)
+  def postObjects(recordingSessions: Array[RecordingSession]) {
+    AkkaApp().actorOf(Props[SecondActor]) ! SessionsReceived(recordingSessions.toList)
   }
 }
