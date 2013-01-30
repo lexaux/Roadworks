@@ -10,9 +10,9 @@
         the service is stopped, packaged data in the format of CSV may be sent to any destination with standard OS
         support.
     </string>
-    <string name="service_disconnected">Service disconnected.</string>
-    <string name="service_start_command">Start service</string>
-    <string name="service_stop_command">Stop service</string>
+    <string name="service_disconnected">Connecting...</string>
+    <string name="service_start_command">Start</string>
+    <string name="service_stop_command">Stop</string>
 
     <string name="showSessionList">Session list</string>
     <string name="showControlScreen">Show main screen</string>

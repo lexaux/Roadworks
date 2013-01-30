@@ -1,5 +1,6 @@
 package com.augmentari.roadworks.sensorlogger.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,10 +14,13 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.augmentari.roadworks.sensorlogger.R;
+import com.augmentari.roadworks.sensorlogger.component.AccelerometerGraphView;
 import com.augmentari.roadworks.sensorlogger.service.DataUploaderService;
 import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Constants;
@@ -24,8 +28,8 @@ import com.augmentari.roadworks.sensorlogger.util.Formats;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 import com.bugsense.trace.BugSenseHandler;
 
-import java.util.Random;
 import java.util.Timer;
+
 import java.util.TimerTask;
 
 
@@ -45,6 +49,8 @@ public class MainActivity extends Activity {
 
     private TextView timeLoggedTextView;
     private TextView statementsLoggedTextView;
+
+    private AccelerometerGraphView accelerometerGraph;
 
     private SensorLoggerService.SessionLoggerServiceBinder binder = null;
 
@@ -128,6 +134,8 @@ public class MainActivity extends Activity {
 
         statementsLoggedTextView = (TextView) findViewById(R.id.statementsLoggedTextView);
         timeLoggedTextView = (TextView) findViewById(R.id.timeLoggedTextView);
+
+        accelerometerGraph = (AccelerometerGraphView) findViewById(R.id.accelerometerGraph);
     }
 
     public void setServiceState(ServiceState serviceState) {

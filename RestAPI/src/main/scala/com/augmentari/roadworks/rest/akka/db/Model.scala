@@ -17,17 +17,20 @@ trait UtilDateConversion {
 
     def sqlType = java.sql.Types.TIMESTAMP
 
-    def setValue(v: java.util.Date, p: PositionedParameters) =
+    def setValue(v: java.util.Date, p: PositionedParameters) {
       p.setDate(new sql.Date(v.getTime))
+    }
 
-    def setOption(v: Option[Date], p: PositionedParameters) =
+    def setOption(v: Option[Date], p: PositionedParameters) {
       p.setDateOption(v.map(d => new sql.Date(d.getTime)))
+    }
 
     def nextValue(r: PositionedResult) = new
-        java.util.Date(r.nextTimestamp.getTime)
+        java.util.Date(r.nextTimestamp().getTime)
 
-    def updateValue(v: java.util.Date, r: PositionedResult) =
+    def updateValue(v: java.util.Date, r: PositionedResult) {
       r.updateTimestamp(new java.sql.Timestamp(v.getTime))
+    }
 
     override def valueToSQLLiteral(value: java.util.Date) = "{ts '" + new
         java.sql.Timestamp(value.getTime).toString + "'}"
@@ -53,7 +56,7 @@ object RecordingSessions extends Table[(Long, Long, Date, Date, Long)]("recordin
 
   def eventsLogged = column[Long]("events_logged", O.NotNull)
 
-  def * = userId ~ id ~ startTime ~ endTime ~ eventsLogged;
+  def * = userId ~ id ~ startTime ~ endTime ~ eventsLogged
 
   def pk = primaryKey("pk_key", (userId, id))
 }
