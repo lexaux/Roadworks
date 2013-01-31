@@ -67,6 +67,8 @@ public class MainActivity extends Activity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             binder = (SensorLoggerService.SessionLoggerServiceBinder) service;
+
+            binder.addAccelChangedListener(accelerometerGraph);
             if (binder.isStarted()) {
                 setServiceState(ServiceState.STARTED);
             } else {
@@ -76,6 +78,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            binder.removeAccelChangedListener(accelerometerGraph);
             binder = null;
             setServiceState(ServiceState.DISCONNECTED);
         }
@@ -134,6 +137,7 @@ public class MainActivity extends Activity {
 
         statementsLoggedTextView = (TextView) findViewById(R.id.statementsLoggedTextView);
         timeLoggedTextView = (TextView) findViewById(R.id.timeLoggedTextView);
+        LinearLayout l = (LinearLayout) findViewById(R.id.chartContainer);
 
         accelerometerGraph = (AccelerometerGraphView) findViewById(R.id.accelerometerGraph);
     }

@@ -28,7 +28,9 @@ import com.augmentari.roadworks.sensorlogger.util.Log;
 
 import java.io.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Sample service -- will be doing 2 things later:
@@ -66,7 +68,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("OnBind");
         return new SessionLoggerServiceBinder();
     }
 
@@ -174,7 +175,6 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        statementsLogged++;
         StringBuilder sb = new StringBuilder();
         sb.append(System.currentTimeMillis()) //as we need to re-sample the actual sequence to a constant sample rate
                 .append(",").append(sensorEvent.values[0])
@@ -184,6 +184,11 @@ public class SensorLoggerService extends Service implements SensorEventListener,
                 .append(",").append(latitude)
                 .append(",").append(longitude);
         fileResultsWriter.println(sb.toString());
+        statementsLogged++;
+
+        for (AccelChangedListener listener : listeners) {
+            listener.onAccelChanged(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
+        }
     }
 
     @Override
@@ -214,6 +219,12 @@ public class SensorLoggerService extends Service implements SensorEventListener,
         Log.i("onProviderDisabled");
     }
 
+    private List<AccelChangedListener> listeners = new ArrayList<AccelChangedListener>();
+
+    public interface AccelChangedListener {
+        public void onAccelChanged(float a, float b, float c);
+    }
+
     public class SessionLoggerServiceBinder extends Binder {
         public boolean isStarted() {
             return isStarted;
@@ -225,6 +236,15 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
         public long getStatementsLogged() {
             return statementsLogged;
+        }
+
+        public void addAccelChangedListener(AccelChangedListener listener) {
+            if (listeners.contains(listener)) return;
+            listeners.add(listener);
+        }
+
+        public void removeAccelChangedListener(AccelChangedListener listener) {
+            listeners.remove(listener);
         }
     }
 }

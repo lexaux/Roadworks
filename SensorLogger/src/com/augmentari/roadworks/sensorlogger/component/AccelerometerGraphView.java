@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 
 import java.util.Random;
@@ -14,48 +16,86 @@ import java.util.Random;
 /**
  * View showing line chart/graph view of the accelerometer readings.
  */
-public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder.Callback {
+public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder.Callback, SensorLoggerService.AccelChangedListener {
 
-    private Paint p;
+    public static final long REFRESH_RATE_MSEC = 200;
+    public static final float GRAVITY_FT_SEC = 9.8f;
+    DrawingThread thread;
 
-    public AccelerometerGraphView(Context context) {
-        super(context);
-    }
+    private CircularBuffer buffer = null;
+    private Paint paint1, paint2, paint3, whitePaint;
+    private int width;
+    private int height;
 
     public AccelerometerGraphView(Context context, AttributeSet attrs) {
-        this(context);
+        super(context, attrs);
         getHolder().addCallback(this);
-        p = new Paint();
-        p.setAntiAlias(true);
-        p.setColor(Color.BLUE);
-        p.setStyle(Paint.Style.FILL);
-    }
 
-    int width = 0;
-    int height = 0;
-    private final int radius = 30;
-    private final int delta = 10;
-    int x = 0;
-    int y = 0;
-    public static final long REFRESH_RATE_MSEC = 20;
-    private final Random random = new Random(System.currentTimeMillis());
-    DrawingThread thread;
+        paint1 = new Paint();
+        paint1.setColor(Color.RED);
+        paint1.setStyle(Paint.Style.STROKE);
+
+        paint2 = new Paint();
+        paint2.setColor(Color.GREEN);
+        paint2.setStyle(Paint.Style.STROKE);
+
+        paint3 = new Paint();
+        paint3.setColor(Color.YELLOW);
+        paint3.setStyle(Paint.Style.STROKE);
+
+        whitePaint = new Paint();
+        whitePaint.setColor(Color.WHITE);
+        whitePaint.setStyle(Paint.Style.STROKE);
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.DKGRAY);
 
-        boolean fits = false;
-        while (!fits) {
-            int multiplier = random.nextBoolean() ? 1 : -1;
-            if (random.nextBoolean()) {
-                x += multiplier * delta;
+        float offset = height / 2;
+        float ftSecToPx = height / (2.5f * GRAVITY_FT_SEC);
+
+        Path path1 = new Path();
+        Path path2 = new Path();
+        Path path3 = new Path();
+
+        for (int i = 0; i < buffer.getActualSize(); i++) {
+            float toX = width - i;
+            float toY = offset + buffer.getA(i) * ftSecToPx;
+            if (i == 0) {
+                path1.moveTo(toX, toY);
             } else {
-                y += multiplier * delta;
+                path1.lineTo(toX, toY);
             }
-            fits = (x > radius / 2 && x < width - radius / 2) && (y > radius / 2 && y < height - radius / 2);
+
+            toX = width - i;
+            toY = offset + buffer.getB(i) * ftSecToPx;
+            if (i == 0) {
+                path2.moveTo(toX, toY);
+            } else {
+                path2.lineTo(toX, toY);
+            }
+
+
+            toX = width - i;
+            toY = offset + buffer.getC(i) * ftSecToPx;
+            if (i == 0) {
+                path3.moveTo(toX, toY);
+            } else {
+                path3.lineTo(toX, toY);
+            }
         }
-        canvas.drawCircle(x, y, radius, p);
+        float center = offset;
+        float topG = offset + ftSecToPx * GRAVITY_FT_SEC;
+        float bottomG = offset - ftSecToPx * GRAVITY_FT_SEC;
+
+        canvas.drawLine(0, topG, width, topG, whitePaint);
+        canvas.drawLine(0, center, width, center, whitePaint);
+        canvas.drawLine(0, bottomG, width, bottomG, whitePaint);
+
+        canvas.drawPath(path1, paint1);
+        canvas.drawPath(path2, paint2);
+        canvas.drawPath(path3, paint3);
     }
 
     @Override
@@ -67,10 +107,9 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        this.width = width;
+        buffer = new CircularBuffer(width);
         this.height = height;
-        x = width / 2 - radius / 2;
-        y = height / 2 - radius / 2;
+        this.width = width;
     }
 
     @Override
@@ -85,10 +124,16 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
                 Log.i("Interrupted stopping drawing thread of the surface");
             }
         }
+        buffer = null;
     }
 
     private static int threadNum = 0;
 
+    @Override
+    public void onAccelChanged(float a, float b, float c) {
+        if (buffer == null) return;
+        buffer.append(a, b, c);
+    }
 
     class DrawingThread extends Thread {
         private final SurfaceHolder holder;
