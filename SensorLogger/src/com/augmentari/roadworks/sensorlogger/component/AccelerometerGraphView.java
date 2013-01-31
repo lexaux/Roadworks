@@ -107,7 +107,9 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        buffer = new CircularBuffer(width);
+        if (buffer == null || buffer.getMaxSize() != width) {
+            buffer = new CircularBuffer(width);
+        }
         this.height = height;
         this.width = width;
     }
@@ -174,5 +176,13 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
                 }
             }
         }
+    }
+
+    public CircularBuffer getBuffer() {
+        return buffer;
+    }
+
+    public void setBuffer(CircularBuffer buffer) {
+        this.buffer = buffer;
     }
 }

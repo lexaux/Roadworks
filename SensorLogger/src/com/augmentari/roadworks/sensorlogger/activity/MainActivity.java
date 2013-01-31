@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.component.AccelerometerGraphView;
+import com.augmentari.roadworks.sensorlogger.component.CircularBuffer;
 import com.augmentari.roadworks.sensorlogger.service.DataUploaderService;
 import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Constants;
@@ -165,6 +166,23 @@ public class MainActivity extends Activity {
                 break;
         }
         this.serviceState = serviceState;
+    }
+
+    private CircularBuffer buffer = null;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.buffer = accelerometerGraph.getBuffer();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (this.buffer != null) {
+            accelerometerGraph.setBuffer(buffer);
+        }
     }
 
     @Override

@@ -39,7 +39,7 @@ public class CircularBuffer {
     }
 
     public float getA(int i) {
-        int index = getActualSize() - i;
+        int index = endIndex - i;
 
         while (index < 0) {
             index += size;
@@ -49,7 +49,7 @@ public class CircularBuffer {
     }
 
     public float getB(int i) {
-        int index = getActualSize() - i;
+        int index = endIndex - i;
 
         while (index < 0) {
             index += size;
@@ -59,12 +59,16 @@ public class CircularBuffer {
     }
 
     public float getC(int i) {
-        int index = getActualSize() - i;
+        int index = endIndex - i;
 
         while (index < 0) {
             index += size;
         }
 
         return dataArray[index + size * 2 - 1];
+    }
+
+    public int getMaxSize() {
+        return size;
     }
 }
