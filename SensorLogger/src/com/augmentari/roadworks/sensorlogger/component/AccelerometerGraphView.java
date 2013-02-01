@@ -18,8 +18,8 @@ import java.util.Random;
  */
 public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder.Callback, SensorLoggerService.AccelChangedListener {
 
-    public static final long REFRESH_RATE_MSEC = 200;
     public static final float GRAVITY_FT_SEC = 9.8f;
+
     DrawingThread thread;
 
     private CircularBuffer buffer = null;
@@ -27,19 +27,23 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
     private int width;
     private int height;
 
+    final Object changedDataLock = new Object();
+    private float offset;
+    private float ftSecToPx;
+
     public AccelerometerGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
 
-        paint1 = new Paint();
+        paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint1.setColor(Color.RED);
         paint1.setStyle(Paint.Style.STROKE);
 
-        paint2 = new Paint();
+        paint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint2.setColor(Color.GREEN);
         paint2.setStyle(Paint.Style.STROKE);
 
-        paint3 = new Paint();
+        paint3 = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint3.setColor(Color.YELLOW);
         paint3.setStyle(Paint.Style.STROKE);
 
@@ -48,54 +52,46 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
         whitePaint.setStyle(Paint.Style.STROKE);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    protected void doDrawOnSeparateThread(Canvas canvas) {
         canvas.drawColor(Color.DKGRAY);
 
-        float offset = height / 2;
-        float ftSecToPx = height / (2.5f * GRAVITY_FT_SEC);
-
-        Path path1 = new Path();
-        Path path2 = new Path();
-        Path path3 = new Path();
-
-        for (int i = 0; i < buffer.getActualSize(); i++) {
-            float toX = width - i;
-            float toY = offset + buffer.getA(i) * ftSecToPx;
-            if (i == 0) {
-                path1.moveTo(toX, toY);
-            } else {
-                path1.lineTo(toX, toY);
-            }
-
-            toX = width - i;
-            toY = offset + buffer.getB(i) * ftSecToPx;
-            if (i == 0) {
-                path2.moveTo(toX, toY);
-            } else {
-                path2.lineTo(toX, toY);
-            }
-
-
-            toX = width - i;
-            toY = offset + buffer.getC(i) * ftSecToPx;
-            if (i == 0) {
-                path3.moveTo(toX, toY);
-            } else {
-                path3.lineTo(toX, toY);
-            }
+        if (buffer == null) {
+            // nothing to draw, quiting.
+            return;
         }
-        float center = offset;
+
         float topG = offset + ftSecToPx * GRAVITY_FT_SEC;
         float bottomG = offset - ftSecToPx * GRAVITY_FT_SEC;
 
         canvas.drawLine(0, topG, width, topG, whitePaint);
-        canvas.drawLine(0, center, width, center, whitePaint);
+        canvas.drawLine(0, offset, width, offset, whitePaint);
         canvas.drawLine(0, bottomG, width, bottomG, whitePaint);
 
-        canvas.drawPath(path1, paint1);
-        canvas.drawPath(path2, paint2);
-        canvas.drawPath(path3, paint3);
+        float lastX1 = width;
+        float lastX2 = width;
+        float lastX3 = width;
+
+        float lastY1 = offset + buffer.getA(0) * ftSecToPx;
+        float lastY2 = offset + buffer.getA(0) * ftSecToPx;
+        float lastY3 = offset + buffer.getA(0) * ftSecToPx;
+
+        for (int i = 1; i < buffer.getActualSize(); i++) {
+            float toX = width - i;
+            float toY = offset + buffer.getA(i) * ftSecToPx;
+            canvas.drawLine(lastX1, lastY1, toX, toY, paint1);
+            lastX1 = toX;
+            lastY1 = toY;
+
+            toY = offset + buffer.getB(i) * ftSecToPx;
+            canvas.drawLine(lastX2, lastY2, toX, toY, paint2);
+            lastX2 = toX;
+            lastY2 = toY;
+
+            toY = offset + buffer.getC(i) * ftSecToPx;
+            canvas.drawLine(lastX3, lastY3, toX, toY, paint3);
+            lastX3 = toX;
+            lastY3 = toY;
+        }
     }
 
     @Override
@@ -112,6 +108,10 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
         }
         this.height = height;
         this.width = width;
+
+        offset = height / 2;
+        ftSecToPx = height / (2.5f * GRAVITY_FT_SEC);
+
     }
 
     @Override
@@ -120,6 +120,9 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
         thread.setRunning(false);
         while (retry) {
             try {
+                synchronized (changedDataLock) {
+                    changedDataLock.notifyAll();
+                }
                 thread.join();
                 retry = false;
             } catch (InterruptedException e) {
@@ -129,10 +132,11 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
         buffer = null;
     }
 
-    private static int threadNum = 0;
-
     @Override
     public void onAccelChanged(float a, float b, float c) {
+        synchronized (changedDataLock) {
+            changedDataLock.notifyAll();
+        }
         if (buffer == null) return;
         buffer.append(a, b, c);
     }
@@ -143,7 +147,7 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
         private boolean running;
 
         public DrawingThread(SurfaceHolder holder, AccelerometerGraphView context) {
-            super("DRAWING_THREAD " + threadNum++);
+            super("Accel drawingn thread");
             this.holder = holder;
             this.graphView = context;
         }
@@ -157,22 +161,22 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
             while (running) {
                 Canvas c = null;
                 try {
+                    synchronized (changedDataLock) {
+                        changedDataLock.wait();
+                    }
                     c = holder.lockCanvas(null);
                     if (c != null) {
                         synchronized (holder) {
-                            graphView.onDraw(c);
+                            graphView.doDrawOnSeparateThread(c);
+                            // drawn, wait for new arrivals.
                         }
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 } finally {
                     if (c != null) {
                         holder.unlockCanvasAndPost(c);
                     }
-                    try {
-                        sleep(REFRESH_RATE_MSEC);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
                 }
             }
         }
