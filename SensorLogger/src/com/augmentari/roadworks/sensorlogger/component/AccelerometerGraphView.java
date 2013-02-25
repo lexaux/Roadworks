@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Log;
 
@@ -16,9 +18,11 @@ import com.augmentari.roadworks.sensorlogger.util.Log;
 public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder.Callback, SensorLoggerService.AccelChangedListener {
 
     public static final float GRAVITY_FT_SEC = 9.8f;
+    // max possible size of the circularbuffer = sizeof(float) * 3 * max(deviceX, deviceY). So, should not be more than
+    // 20Kb
+    private static CircularBuffer buffer = null;
     final Object changedDataLock = new Object();
     DrawingThread thread;
-    private CircularBuffer buffer = null;
     private Paint paint1, paint2, paint3, whitePaint;
     private int width;
     private int height;
@@ -98,8 +102,11 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        if (buffer == null || buffer.getMaxSize() != width) {
-            buffer = new CircularBuffer(width);
+        if (buffer == null) {
+            WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            Point p = new Point();
+            manager.getDefaultDisplay().getSize(p);
+            buffer = new CircularBuffer(Math.max(p.x, p.y));
         }
         this.height = height;
         this.width = width;
@@ -124,7 +131,6 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
                 Log.i("Interrupted stopping drawing thread of the surface");
             }
         }
-        buffer = null;
     }
 
     @Override
