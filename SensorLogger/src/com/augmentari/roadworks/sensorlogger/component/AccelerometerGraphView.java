@@ -4,14 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import com.augmentari.roadworks.sensorlogger.service.SensorLoggerService;
 import com.augmentari.roadworks.sensorlogger.util.Log;
-
-import java.util.Random;
 
 /**
  * View showing line chart/graph view of the accelerometer readings.
@@ -19,15 +16,12 @@ import java.util.Random;
 public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder.Callback, SensorLoggerService.AccelChangedListener {
 
     public static final float GRAVITY_FT_SEC = 9.8f;
-
+    final Object changedDataLock = new Object();
     DrawingThread thread;
-
     private CircularBuffer buffer = null;
     private Paint paint1, paint2, paint3, whitePaint;
     private int width;
     private int height;
-
-    final Object changedDataLock = new Object();
     private float offset;
     private float ftSecToPx;
 
@@ -72,8 +66,8 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
         float lastX3 = width;
 
         float lastY1 = offset + buffer.getA(0) * ftSecToPx;
-        float lastY2 = offset + buffer.getA(0) * ftSecToPx;
-        float lastY3 = offset + buffer.getA(0) * ftSecToPx;
+        float lastY2 = offset + buffer.getB(0) * ftSecToPx;
+        float lastY3 = offset + buffer.getC(0) * ftSecToPx;
 
         for (int i = 1; i < buffer.getActualSize(); i++) {
             float toX = width - i;
@@ -89,6 +83,7 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
 
             toY = offset + buffer.getC(i) * ftSecToPx;
             canvas.drawLine(lastX3, lastY3, toX, toY, paint3);
+
             lastX3 = toX;
             lastY3 = toY;
         }
@@ -141,6 +136,14 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
         buffer.append(a, b, c);
     }
 
+    public CircularBuffer getBuffer() {
+        return buffer;
+    }
+
+    public void setBuffer(CircularBuffer buffer) {
+        this.buffer = buffer;
+    }
+
     class DrawingThread extends Thread {
         private final SurfaceHolder holder;
         private final AccelerometerGraphView graphView;
@@ -180,13 +183,5 @@ public class AccelerometerGraphView extends SurfaceView implements SurfaceHolder
                 }
             }
         }
-    }
-
-    public CircularBuffer getBuffer() {
-        return buffer;
-    }
-
-    public void setBuffer(CircularBuffer buffer) {
-        this.buffer = buffer;
     }
 }

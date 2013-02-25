@@ -7,15 +7,15 @@ import java.util.Arrays;
  */
 public class CircularBuffer {
 
-    private float[] dataArray;
-
-    private int size;
-
     int endIndex = -1; // will be incremented after the startup
 
-    boolean isOverflown = false;
 
-    public CircularBuffer(int size) {
+    private int size;
+    public
+    boolean isOverflown = false;
+    private float[] dataArray;
+
+    CircularBuffer(int size) {
         dataArray = new float[size * 3];
         Arrays.fill(dataArray, 0);
 
@@ -23,8 +23,9 @@ public class CircularBuffer {
     }
 
     public synchronized void append(float a, float b, float c) {
-        if (endIndex == size - 1)
+        if (endIndex == size - 1) {
             isOverflown = true;
+        }
         endIndex = ++endIndex % size;
         dataArray[endIndex] = a;
         dataArray[endIndex + size] = b;
@@ -38,7 +39,7 @@ public class CircularBuffer {
         return endIndex + 1;
     }
 
-    public float getA(int i) {
+    public synchronized float getA(int i) {
         int index = endIndex - i;
 
         while (index < 0) {
@@ -55,7 +56,7 @@ public class CircularBuffer {
             index += size;
         }
 
-        return dataArray[index + size - 1];
+        return dataArray[index + size];
     }
 
     public float getC(int i) {
@@ -65,7 +66,7 @@ public class CircularBuffer {
             index += size;
         }
 
-        return dataArray[index + size * 2 - 1];
+        return dataArray[index + size * 2];
     }
 
     public int getMaxSize() {
