@@ -26,47 +26,45 @@
             <artifactId>roadworks-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
             <version>6.1.22</version>
         </dependency>
-
         <dependency>
             <groupId>com.typesafe.slick</groupId>
             <artifactId>slick_2.10</artifactId>
             <version>1.0.0-RC2</version>
         </dependency>
-
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-actor_2.10</artifactId>
             <version>2.1.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.clapper</groupId>
             <artifactId>grizzled-slf4j_2.10</artifactId>
             <version>1.0.1</version>
         </dependency>
-
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
             <version>1.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
             <version>1.16</version>
         </dependency>
-
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
             <version>1.16</version>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901.jdbc4</version>
         </dependency>
     </dependencies>
 
@@ -91,8 +89,16 @@
                     <scalaVersion>2.10</scalaVersion>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <configuration>
+                    <url>http://46.4.224.49/manager/text</url>
+                    <server>interserver-hosting</server>
+                    <path>/</path>
+                </configuration>
+            </plugin>
         </plugins>
-
     </build>
 
 </project>
