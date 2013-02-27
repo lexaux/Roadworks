@@ -4,6 +4,8 @@ version := "0.1"
 
 scalaVersion := "2.10.0"
 
+scalaSource in Compile <<= (sourceDirectory in Compile)(file(".."))
+
 seq(webSettings :_*)
 
 libraryDependencies ++= Seq(
