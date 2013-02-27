@@ -13,6 +13,11 @@
         surface of the roads in a community-driven manner.
     </description>
     <url>http://github.com/lexaux/Roadworks</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modules>
         <module>Common</module>
         <module>RestAPI</module>
