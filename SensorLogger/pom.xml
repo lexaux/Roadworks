@@ -43,6 +43,16 @@
         <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <version>2.3.2</version>
+            </plugin>
+
+            <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
                 <version>3.5.1</version>
@@ -55,10 +65,67 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>sign-teamcity</id>
+            <properties>
+                <android.keystore.location>/home/lexaux/android-keystore</android.keystore.location>
+                <android.keystore.storepass>HIDDEN</android.keystore.storepass>
+                <android.keystore.keypass>HIDDEN</android.keystore.keypass>
+                <android.keystore.keyalias>key0</android.keystore.keyalias>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.2</version>
+                        <executions>
+                            <execution>
+                                <id>signing</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <inherited>true</inherited>
+                                <configuration>
+                                    <archiveDirectory></archiveDirectory>
+                                    <includes>
+                                        <include>target/*.apk</include>
+                                    </includes>
+                                    <keystore>${android.keystore.location}</keystore>
+                                    <storepass>${android.keystore.storepass}</storepass>
+                                    <keypass>${android.keystore.keypass}</keypass>
+                                    <alias>${android.keystore.keyalias}</alias>
+                                    <arguments>
+                                        <argument>-sigalg</argument>
+                                        <argument>MD5withRSA</argument>
+                                        <argument>-digestalg</argument>
+                                        <argument>SHA1</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                        <artifactId>android-maven-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <sign>
+                                <debug>false</debug>
+                            </sign>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 
     <repositories>
         <repository>
-            <id>local</id>
+            <id>local-scm</id>
             <releases>
                 <enabled>true</enabled>
                 <checksumPolicy>ignore</checksumPolicy>

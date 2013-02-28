@@ -23,16 +23,8 @@
         <module>RestAPI</module>
         <module>SensorLogger</module>
     </modules>
-    <dependencyManagement>
-        <dependencies>
-            <!--<dependency>-->
-            <!--<groupId>org.owasp</groupId>-->
-            <!--<artifactId>antisamy</artifactId>-->
-            <!--<version>1.4</version>-->
-            <!--</dependency>-->
-        </dependencies>
-    </dependencyManagement>
     <build>
+
         <pluginManagement>
         </pluginManagement>
 
