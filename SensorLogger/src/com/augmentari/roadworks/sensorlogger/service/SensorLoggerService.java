@@ -18,8 +18,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.Toast;
 import com.augmentari.roadworks.model.RecordingSession;
-import com.augmentari.roadworks.sensorlogger.activity.MainActivity;
 import com.augmentari.roadworks.sensorlogger.R;
+import com.augmentari.roadworks.sensorlogger.activity.MainActivity;
 import com.augmentari.roadworks.sensorlogger.dao.RecordingSessionDAO;
 import com.augmentari.roadworks.sensorlogger.util.CloseUtils;
 import com.augmentari.roadworks.sensorlogger.util.Constants;
@@ -37,42 +37,40 @@ import java.util.List;
  * 1) collecting data from various sources (accelerometer, GPS, maybe microphone)
  * 2) packing it, preparing and sending to the rest (server)
  */
-public class SensorLoggerService extends Service implements SensorEventListener, LocationListener {
+public class SensorLoggerService extends Service implements SensorEventListener, LocationListener
+{
 
-    private boolean isStarted = false;
     // size of the buffer for the file stream; .5M for a start
     public static final int BUFFER_SIZE = 128 * 1024;
-
+    private boolean isStarted = false;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private LocationManager locationManager;
-
     private FileOutputStream outputStream;
     private PrintWriter fileResultsWriter;
-
     private long startTimeMillis;
     private long statementsLogged;
-
     private double latitude = 0;
     private double longitude = 0;
     private float speed = 0;
-
     private RecordingSessionDAO recordingSessionDAO;
-
     // A Wake Lock object. Lock is acquired when the application asks the service to start listening to events, and
     // is releaserd when the service is actually stopped. As this wake lock is a PARTIAL one, screen may go off but the
     // processor should remain running in the background
     private PowerManager.WakeLock wakeLock = null;
-
     private RecordingSession currentSession;
+    private List<AccelChangedListener> listeners = new ArrayList<AccelChangedListener>();
+    private float[] gravity = new float[3];
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return new SessionLoggerServiceBinder();
     }
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         recordingSessionDAO = new RecordingSessionDAO(this);
@@ -81,7 +79,8 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
         Log.i("On start command");
         isStarted = true;
 
@@ -100,8 +99,10 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
         startForeground(Constants.ONGOING_NOTIFICATION, notification);
 
-        if (accelerometer == null) {
-            try {
+        if (accelerometer == null)
+        {
+            try
+            {
                 currentSession = new RecordingSession();
                 currentSession.setStartTime(new Date());
 
@@ -115,7 +116,8 @@ public class SensorLoggerService extends Service implements SensorEventListener,
                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, BUFFER_SIZE);
                 fileResultsWriter = new PrintWriter(new OutputStreamWriter(bufferedOutputStream));
                 writeHeading();
-            } catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e)
+            {
                 CloseUtils.closeStream(outputStream);
                 throw new RuntimeException(e);
             }
@@ -135,9 +137,11 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         Log.i("On service destroy");
-        if (!isStarted) {
+        if (!isStarted)
+        {
             // we have only been bound, and no real action to take.
             return;
         }
@@ -147,7 +151,8 @@ public class SensorLoggerService extends Service implements SensorEventListener,
 
         // seem like don't need to close 'lower' streams, as this delegates close command down the
         // chain till the fileOutputStream
-        if (wakeLock != null) {
+        if (wakeLock != null)
+        {
             wakeLock.release();
         }
         CloseUtils.closeStream(fileResultsWriter);
@@ -168,36 +173,57 @@ public class SensorLoggerService extends Service implements SensorEventListener,
         super.onDestroy();
     }
 
-    private void writeHeading() {
+    private void writeHeading()
+    {
         fileResultsWriter.println("Time, Accelerometer Sensor 1, Sensor 2, Sensor 3, Gps Speed, Latitude, Longitude");
     }
 
-
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
+    public void onSensorChanged(SensorEvent sensorEvent)
+    {
+        recordReading(sensorEvent.values);
+    }
+
+    private void recordReading(float[] readings)
+    {
+        assert readings.length == 3;
+
+        final float alpha = 0.8f;
+
+        gravity[0] = alpha * gravity[0] + (1 - alpha) * readings[0];
+        gravity[1] = alpha * gravity[1] + (1 - alpha) * readings[1];
+        gravity[2] = alpha * gravity[2] + (1 - alpha) * readings[2];
+
+        float x = readings[0] - gravity[0];
+        float y = readings[1] - gravity[1];
+        float z = readings[2] - gravity[2];
+
         StringBuilder sb = new StringBuilder();
         sb.append(System.currentTimeMillis()) //as we need to re-sample the actual sequence to a constant sample rate
-                .append(",").append(sensorEvent.values[0])
-                .append(",").append(sensorEvent.values[1])
-                .append(",").append(sensorEvent.values[2])
+                .append(",").append(x)
+                .append(",").append(y)
+                .append(",").append(z)
                 .append(",").append(speed)
                 .append(",").append(latitude)
                 .append(",").append(longitude);
         fileResultsWriter.println(sb.toString());
-        statementsLogged++;
 
-        for (AccelChangedListener listener : listeners) {
-            listener.onAccelChanged(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]);
+        statementsLogged++;
+        for (AccelChangedListener listener : listeners)
+        {
+            listener.onAccelChanged(x, y, z);
         }
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
+    public void onAccuracyChanged(Sensor sensor, int i)
+    {
         Log.i("onAccuracyChanged");
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location)
+    {
         Log.i("onLocationChanged");
         latitude = location.getLatitude();
         longitude = location.getLongitude();
@@ -205,45 +231,53 @@ public class SensorLoggerService extends Service implements SensorEventListener,
     }
 
     @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
+    public void onStatusChanged(String s, int i, Bundle bundle)
+    {
         Log.i("onStatusChanged");
     }
 
     @Override
-    public void onProviderEnabled(String s) {
+    public void onProviderEnabled(String s)
+    {
         Log.i("onProviderEnabled");
     }
 
     @Override
-    public void onProviderDisabled(String s) {
+    public void onProviderDisabled(String s)
+    {
         Log.i("onProviderDisabled");
     }
 
-    private List<AccelChangedListener> listeners = new ArrayList<AccelChangedListener>();
-
-    public interface AccelChangedListener {
+    public interface AccelChangedListener
+    {
         public void onAccelChanged(float a, float b, float c);
     }
 
-    public class SessionLoggerServiceBinder extends Binder {
-        public boolean isStarted() {
+    public class SessionLoggerServiceBinder extends Binder
+    {
+        public boolean isStarted()
+        {
             return isStarted;
         }
 
-        public long getStartTimeMillis() {
+        public long getStartTimeMillis()
+        {
             return startTimeMillis;
         }
 
-        public long getStatementsLogged() {
+        public long getStatementsLogged()
+        {
             return statementsLogged;
         }
 
-        public void addAccelChangedListener(AccelChangedListener listener) {
+        public void addAccelChangedListener(AccelChangedListener listener)
+        {
             if (listeners.contains(listener)) return;
             listeners.add(listener);
         }
 
-        public void removeAccelChangedListener(AccelChangedListener listener) {
+        public void removeAccelChangedListener(AccelChangedListener listener)
+        {
             listeners.remove(listener);
         }
     }
