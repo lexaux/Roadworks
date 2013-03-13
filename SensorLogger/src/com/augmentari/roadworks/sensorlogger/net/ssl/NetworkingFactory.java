@@ -2,7 +2,6 @@ package com.augmentari.roadworks.sensorlogger.net.ssl;
 
 import android.content.Context;
 import com.augmentari.roadworks.sensorlogger.R;
-import com.augmentari.roadworks.sensorlogger.util.Log;
 import org.apache.http.conn.ssl.StrictHostnameVerifier;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -23,7 +22,7 @@ import java.security.cert.CertificateException;
  */
 public class NetworkingFactory {
 
-    private static final String TRUSTED_KEYSTORE_PASSWORD = "changeit";
+    private static final String TRUSTED_KEYSTORE_PASSWORD = "tomcat";
 
     private static SSLContext sslContext = null;
 
@@ -84,7 +83,7 @@ public class NetworkingFactory {
 
         InputStream fis = null;
         try {
-            fis = context.getResources().openRawResource(R.raw.mystore);
+            fis = context.getResources().openRawResource(R.raw.interserver_public_keystore);
             ks.load(fis, password);
             return ks;
         } finally {
