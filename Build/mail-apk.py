@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import smtplib, os
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEBase import MIMEBase
@@ -10,7 +11,9 @@ smtpPort = 465
 smtpUsername = 'poseidontestuser1'
 smtpPassword = 'poseidontestuser1'
 
-pathToAttachment = '../SensorLogger/target/roadworks-sensorlogger-android.apk'
+
+pathToCurrentScript = os.path.dirname(os.path.abspath(__file__))
+pathToAttachment = pathToCurrentScript + '/../SensorLogger/target/roadworks-sensorlogger-android.apk'
 
 def send_mail(send_from, send_to, subject, text, files=[]):
     assert type(send_to)==list
@@ -37,7 +40,7 @@ def send_mail(send_from, send_to, subject, text, files=[]):
     smtp.close()
 
 if os.path.exists(pathToAttachment):
-    send_mail('poseidontestuser@gmail.com', ['lexaux@gmail.com'], 'New version of an APK coming in', 'Please see attahced file', [pathToAttachment])
+    send_mail('poseidontestuser@gmail.com', ['lexaux@gmail.com', 'krasnovegorinc@gmail.com'], 'Roadworks SensorLogger: new version attached.', 'Please install the attached file', [pathToAttachment])
 else:
     print 'No apk found. Looks like build did not complete well?'
     os._exit(2)
