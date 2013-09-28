@@ -11,6 +11,7 @@
         support.
     </string>
     <string name="service_disconnected">Connecting...</string>
+
     <string name="service_start_command">Start</string>
     <string name="service_stop_command">Stop</string>
 

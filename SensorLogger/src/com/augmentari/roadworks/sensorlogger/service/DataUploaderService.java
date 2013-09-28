@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 import com.augmentari.roadworks.model.RecordingSession;
 import com.augmentari.roadworks.sensorlogger.R;
 import com.augmentari.roadworks.sensorlogger.activity.PrefActivity;
@@ -148,24 +149,22 @@ public class DataUploaderService extends Service {
                 text = String.format(getString(R.string.data_upload_service_success_text), sessionsUploaded);
                 ticker = R.string.data_upload_service_success_ticker;
                 activityClassToOpen = SessionListActivity.class;
-            } else {
-                text = getString(R.string.data_upload_service_fail_text) + " " + ex.getMessage();
-                ticker = R.string.data_upload_service_fail_ticker;
-                activityClassToOpen = PrefActivity.class;
-            }
-            Intent notificationIntent = new Intent(DataUploaderService.this, activityClassToOpen);
-            PendingIntent pendingIntent = PendingIntent.getActivity(DataUploaderService.this, 0, notificationIntent, 0);
+                Intent notificationIntent = new Intent(DataUploaderService.this, activityClassToOpen);
+                PendingIntent pendingIntent = PendingIntent.getActivity(DataUploaderService.this, 0, notificationIntent, 0);
 
-            Notification notification = new Notification.Builder(DataUploaderService.this)
-                    .setTicker(getString(ticker))
-                    .setContentTitle(getString(title))
-                    .setContentText(text)
-                    .setSmallIcon(R.drawable.ic_stat_logger_notification)
-                    .setWhen(System.currentTimeMillis())
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .getNotification();
-            notificationManager.notify(Constants.DATA_UPLOADER_NOTIFICATION, notification);
+                Notification notification = new Notification.Builder(DataUploaderService.this)
+                        .setTicker(getString(ticker))
+                        .setContentTitle(getString(title))
+                        .setContentText(text)
+                        .setSmallIcon(R.drawable.ic_stat_logger_notification)
+                        .setWhen(System.currentTimeMillis())
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .getNotification();
+                notificationManager.notify(Constants.DATA_UPLOADER_NOTIFICATION, notification);
+            } else {
+                Toast.makeText(DataUploaderService.this, R.string.data_upload_service_fail_text, Toast.LENGTH_LONG);
+            }
         }
     }
 }
