@@ -28,6 +28,7 @@ public class RecordingSession {
     private long eventsLogged;
     private String dataFileFullPath;
     private State state;
+    private String Date;
 
     public long getId() {
         return id;
@@ -75,5 +76,13 @@ public class RecordingSession {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String Date) {
+        this.Date = Date;
     }
 }
