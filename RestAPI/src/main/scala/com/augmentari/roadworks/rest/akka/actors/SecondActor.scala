@@ -21,7 +21,7 @@ class SecondActor extends Actor with grizzled.slf4j.Logging {
 
   def receive = {
     case SessionsReceived(x) => {
-      Database.forURL("jdbc:postgresql://localhost/slicktest", "username", "password", driver = "org.postgresql.Driver") withSession {
+      Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
         val res = RecordingSessions.insertAll(x.map(s => (1L, s.getId, s.getStartTime, s.getEndTime, s.getEventsLogged)).toSeq: _*)
         sender ! SessionsReceivedResp(res getOrElse 0)
         info("Processed")
