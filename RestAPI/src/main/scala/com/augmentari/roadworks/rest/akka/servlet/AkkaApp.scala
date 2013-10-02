@@ -11,9 +11,9 @@ import com.augmentari.roadworks.rest.akka.db.RecordingSessions
 
 class AkkaServletContextListener extends ServletContextListener with Logging {
 
-
+ /*
   def createDB() {
-    Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "mp291382", driver = "org.postgresql.Driver") withSession {
+   Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
       try {
         RecordingSessions.ddl.drop
         info("deleted database")
@@ -25,7 +25,7 @@ class AkkaServletContextListener extends ServletContextListener with Logging {
   }
 
   createDB()
-
+*/
   def contextDestroyed(p1: ServletContextEvent) {
     AkkaApp.actorSystem.shutdown()
     AkkaApp.actorSystem.awaitTermination()
