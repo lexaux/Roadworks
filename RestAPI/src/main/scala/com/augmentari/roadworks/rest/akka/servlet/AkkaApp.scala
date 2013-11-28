@@ -13,13 +13,11 @@ class AkkaServletContextListener extends ServletContextListener with Logging {
 
  /*
   def createDB() {
-   Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
+    Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
       try {
         RecordingSessions.ddl.drop
-        info("deleted database")
       } finally {
         RecordingSessions.ddl.create
-        info("database created")
       }
     }
   }

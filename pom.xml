@@ -21,8 +21,9 @@
     <modules>
         <module>Common</module>
         <module>RestAPI</module>
-        <module>SensorLogger</module>
     </modules>
+
+
     <build>
 
         <pluginManagement>
