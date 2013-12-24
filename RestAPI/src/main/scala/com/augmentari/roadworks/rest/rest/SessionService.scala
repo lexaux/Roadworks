@@ -8,6 +8,7 @@ import com.augmentari.roadworks.rest.akka.actors.{SessionsReceivedResp, Sessions
 import com.augmentari.roadworks.model.RecordingSession
 import concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.augmentari.roadworks.rest.akka.actors.Succes
 
 /**
  * Sample REST service.
@@ -27,15 +28,16 @@ class SessionService extends ServiceConstants with grizzled.slf4j.Logging {
   @Consumes(Array("application/json"))
   @Produces(Array("application/json"))
   def postObjects(recordingSessions: Array[RecordingSession]) {
-    var secondActor = AkkaApp().actorOf(Props[SecondActor]);
-    var future = secondActor ? SessionsReceived(recordingSessions.toList)
-    var res = Await.result(future, timeout.duration).asInstanceOf[SessionsReceivedResp]
+    var secondActor = AkkaApp().actorOf(Props[SecondActor])
+    secondActor ! SessionsReceived(recordingSessions.toList)
+    var future = secondActor ? Succes
+    var res = Await.result(future, timeout.duration)//.asInstanceOf[SessionsReceivedResp]
 
 
-    future onSuccess {
+    /*future onSuccess {
       case SessionsReceivedResp(count) => info("Saved " + res.inserted + "  results")
       case _ => info("Got wrong results")
-    }
+    }*/
     info("sending response")
   }
 }

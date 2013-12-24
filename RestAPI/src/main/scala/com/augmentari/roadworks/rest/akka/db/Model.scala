@@ -60,3 +60,28 @@ object RecordingSessions extends Table[(Long, Long, Date, Date, Long)]("recordin
 
   def pk = primaryKey("pk_key", (userId, id))
 }
+
+//case class PointsClass(id: Option[Int], time: Date, sensor1: Double, sensor2: Double, sensor3: Double, speed: Double, latitude: Double, longitude: Double)
+
+object Points extends Table[(Date, Double, Double, Double, Double, Double, Double)]("points") with  UtilDateConversion {
+
+  //def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
+  def time = column[Date]("time", O.NotNull)
+
+  def sensor1 = column[Double]("sensor1", O.NotNull)
+
+  def sensor2 = column[Double]("sensor2", O.NotNull)
+
+  def sensor3 = column[Double]("sensor3", O.NotNull)
+
+  def speed = column[Double]("speed", O.NotNull)
+
+  def latitude = column[Double]("latitude", O.NotNull)
+
+  def longitude = column[Double]("longitude", O.NotNull)
+
+  def * = time ~ sensor1 ~ sensor2 ~ sensor3 ~ speed ~ latitude  ~ longitude
+
+  def pk = primaryKey("pk_Points", (sensor1, sensor2, sensor3, speed, latitude, longitude))
+}
