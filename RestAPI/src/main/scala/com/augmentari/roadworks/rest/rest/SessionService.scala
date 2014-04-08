@@ -28,10 +28,10 @@ class SessionService extends ServiceConstants with grizzled.slf4j.Logging {
   @Consumes(Array("application/json"))
   @Produces(Array("application/json"))
   def postObjects(recordingSessions: Array[RecordingSession]) {
-    var secondActor = AkkaApp().actorOf(Props[SecondActor])
-    secondActor ! SessionsReceived(recordingSessions.toList)
-    var future = secondActor ? Succes
-    var res = Await.result(future, timeout.duration)//.asInstanceOf[SessionsReceivedResp]
+    val secondActor = AkkaApp().actorOf(Props[SecondActor])
+    secondActor ! SessionsReceived(recordingSessions.toList)/*
+    val future = secondActor ? Succes
+    var res = Await.result(future, timeout.duration)//.asInstanceOf[SessionsReceivedResp]*/
 
 
     /*future onSuccess {

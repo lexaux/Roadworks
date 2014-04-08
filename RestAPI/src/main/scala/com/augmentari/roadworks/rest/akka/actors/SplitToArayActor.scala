@@ -11,14 +11,16 @@ import java.util.{Date, Calendar}
  * Time: 19:05
  * To change this template use File | Settings | File Templates.
  */
-class SplitToArayActor extends Actor {
+class SplitToArrayActor extends Actor with grizzled.slf4j.Logging{
 
   def receive = {
     case data: String =>
       sender ! SplitArray(data)
+
+    case _ => info("Type of variable is not correct: String")
   }
 
-  def SplitArray(data: String): Array[DBData] = {
+  def SplitArray(data: String):SplitedArray = SplitedArray {
     val formatter = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm")
     def getTimes(x: String): Date = {
       val milliSeconds: Long = x.toLong
@@ -31,14 +33,17 @@ class SplitToArayActor extends Actor {
       data(1).toDouble,
       data(2).toDouble,
       data(3).toDouble,
-      data(4).toDouble,
-      data(5).toDouble,
-      data(6).toDouble)
+      data(4).toDouble
+    )
 
-    val linesArray = for (lines <- data.split('\n'))
-    yield lines.split(',').toArray
+    var linesArray = for (lines <- data.split('\n'))
+      yield lines.split(',').toArray
+
+   linesArray = linesArray.drop(1);
+
     val db = for (res <- linesArray)
-    yield toDBData(res)
+      yield toDBData(res)
+
     db
   }
 }

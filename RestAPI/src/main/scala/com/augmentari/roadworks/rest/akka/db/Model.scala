@@ -44,9 +44,7 @@ trait UtilDateConversion {
 /**
  * Akka application setup here.
  */
-object RecordingSessions extends Table[(Long, Long, Date, Date, Long)]("recording_session") with UtilDateConversion {
-
-  def userId = column[Long]("user_id")
+object RecordingSessions extends Table[(Long, Date, Date, Long)]("recording_session") with UtilDateConversion {
 
   def id = column[Long]("id")
 
@@ -56,32 +54,29 @@ object RecordingSessions extends Table[(Long, Long, Date, Date, Long)]("recordin
 
   def eventsLogged = column[Long]("events_logged", O.NotNull)
 
-  def * = userId ~ id ~ startTime ~ endTime ~ eventsLogged
+  def * = id ~ startTime ~ endTime ~ eventsLogged
 
-  def pk = primaryKey("pk_key", (userId, id))
+  def pk = primaryKey("pk_key", (id, startTime))
 }
 
-//case class PointsClass(id: Option[Int], time: Date, sensor1: Double, sensor2: Double, sensor3: Double, speed: Double, latitude: Double, longitude: Double)
+case class PointsClass(id: Option[Int], time: Date, severity: Double, latitude: Double, longitude: Double, speed: Double)
 
-object Points extends Table[(Date, Double, Double, Double, Double, Double, Double)]("points") with  UtilDateConversion {
+object Points extends Table[PointsClass]("points") with UtilDateConversion {
 
-  //def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-  def time = column[Date]("time", O.NotNull)
+  def time = column[Date]("add_time", O.NotNull)
 
-  def sensor1 = column[Double]("sensor1", O.NotNull)
-
-  def sensor2 = column[Double]("sensor2", O.NotNull)
-
-  def sensor3 = column[Double]("sensor3", O.NotNull)
-
-  def speed = column[Double]("speed", O.NotNull)
+  def severity = column[Double]("severity", O.NotNull)
 
   def latitude = column[Double]("latitude", O.NotNull)
 
   def longitude = column[Double]("longitude", O.NotNull)
 
-  def * = time ~ sensor1 ~ sensor2 ~ sensor3 ~ speed ~ latitude  ~ longitude
+  def speed = column[Double]("speed", O.NotNull)
 
-  def pk = primaryKey("pk_Points", (sensor1, sensor2, sensor3, speed, latitude, longitude))
+  def * = id.? ~ time ~ severity ~ latitude ~ longitude ~ speed <>(PointsClass, PointsClass.unapply _)
+
+  def insrt = time ~ severity ~ latitude ~ longitude ~ speed returning id
 }
+

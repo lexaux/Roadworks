@@ -1,6 +1,7 @@
 package com.augmentari.roadworks.rest.akka.actors
 
-import akka.actor.Actor
+import
+akka.actor.Actor
 
 //import com.augmentari.roadworks.rest.akka.actors.{DBData, PointedArray}
 
@@ -17,19 +18,20 @@ import Database.threadLocalSession
  * To change this template use File | Settings | File Templates.
  */
 
-class WorkWithDBActor extends Actor {
+class WorkWithDBActor extends Actor with grizzled.slf4j.Logging {
 
   def receive = {
-    case PointedArray(pointArray) => {
-      connectionToDB(pointArray)
+    case split: Array[DBData] => {
+      connectionToDB(split)
       sender ! Succes("Succes!")
     }
+    case _ => info("Type of variable is not correct: SplitedArray")
   }
 
   def connectionToDB(pointArray: Array[DBData]) = {
     Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
       for (point <- pointArray)
-        Points.insert(point.Time, point.Sensor1, point.Sensor2, point.Sensor3, point.Speed, point.Latitude, point.Longitude)
+         Points.insrt.insert(point.Time, point.Severity, point.Latitude, point.Longitude, point.Speed)
     }
   }
 }
