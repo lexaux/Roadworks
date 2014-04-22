@@ -1,12 +1,7 @@
-# Roadworks SensorLogger Android application
+# Roadworks SensorLogger Server
 
-This is a mobile client application, doing 2 maing things:
- * When the user is driving, and has this app enabled, it collects accelerometer,
-   GPS and other sensor readings, processes them and sends to server.
- * It allows looking at the map to determine surface quality, individual potholes etc.
-
-Please check settings.
-
+This is the serverside of the mobile data collection software set targeted at collecting and building
+map of road surface features and problems (potholes, scratches, waves etc).
 
 ## DB Connection - system properties
 By default, the application would try to reach `jdbc://postgresql/localhost/slicktest` database, with user
