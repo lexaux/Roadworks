@@ -5,12 +5,13 @@ This is a mobile client application, doing 2 maing things:
    GPS and other sensor readings, processes them and sends to server.
  * It allows looking at the map to determine surface quality, individual potholes etc.
 
- Please check settings.
+Please check settings.
 
- ## DB Connection - system properties
- By default, the application would try to reach `jdbc://postgresql/localhost/slicktest` database, with user
- `postgres` and `password` postgres. If that's not the one you want (the common case for remote and non-playground
- environments, please define some system props to alter this behavior:
+
+## DB Connection - system properties
+By default, the application would try to reach `jdbc://postgresql/localhost/slicktest` database, with user
+`postgres` and `password` postgres. If that's not the one you want (the common case for remote and non-playground
+environments, please define some system props to alter this behavior:
   * `ROADWORKS_JDBC_CONNECTION_STRING` - jdbc connection string to a database.
   * `ROADWORKS_JDBC_USERNAME` and `ROADWORKS_JDBC_PASSWORD`. Should be quite straightforward.
 
