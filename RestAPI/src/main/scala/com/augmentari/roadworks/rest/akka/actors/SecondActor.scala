@@ -4,7 +4,7 @@ import
 akka.actor.{Actor, ActorRef, Props}
 import com.augmentari.roadworks.model.RecordingSession
 import slick.session.Database
-import com.augmentari.roadworks.rest.akka.db.RecordingSessions
+import com.augmentari.roadworks.rest.akka.db.{DBConnector, RecordingSessions}
 import scala.slick.driver.PostgresDriver.simple._
 import Database.threadLocalSession
 import java.util.{Date, Calendar}
@@ -40,7 +40,7 @@ class SecondActor extends Actor with grizzled.slf4j.Logging {
 
   def receive = {
     case SessionsReceived(x) => {
-      Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
+      DBConnector withDB {
         val res = RecordingSessions.insertAll(x.map(s => (s.getId, s.getStartTime, s.getEndTime, s.getEventsLogged)).toSeq: _*)
 //        sender ! SessionsReceivedResp(res getOrElse(0))
         info("Processed")

@@ -6,7 +6,7 @@ akka.actor.Actor
 //import com.augmentari.roadworks.rest.akka.actors.{DBData, PointedArray}
 
 import slick.session.Database
-import com.augmentari.roadworks.rest.akka.db.Points
+import com.augmentari.roadworks.rest.akka.db.{DBConnector, Points}
 import scala.slick.driver.PostgresDriver.simple._
 import Database.threadLocalSession
 
@@ -29,9 +29,9 @@ class WorkWithDBActor extends Actor with grizzled.slf4j.Logging {
   }
 
   def connectionToDB(pointArray: Array[DBData]) = {
-    Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
+    DBConnector.withDB {
       for (point <- pointArray)
-         Points.insrt.insert(point.Time, point.Severity, point.Latitude, point.Longitude, point.Speed)
+        Points.insrt.insert(point.Time, point.Severity, point.Latitude, point.Longitude, point.Speed)
     }
   }
 }

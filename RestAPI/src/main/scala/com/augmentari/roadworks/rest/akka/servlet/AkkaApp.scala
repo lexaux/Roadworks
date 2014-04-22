@@ -8,17 +8,9 @@ import slick.session.Database
 import javax.servlet.{ServletContextEvent, ServletContextListener}
 
 import Database.threadLocalSession
-import com.augmentari.roadworks.rest.akka.db.{RecordingSessions, PointsClass, Points}
+import com.augmentari.roadworks.rest.akka.db.{DBConnector, RecordingSessions, PointsClass, Points}
 
 class AkkaServletContextListener extends ServletContextListener with Logging {
-
-/*def createDB() {
-  Database.forURL("jdbc:postgresql://127.0.0.1/slicktest", "postgres", "postgres", driver = "org.postgresql.Driver") withSession {
-    Points.insrt.insert()
-  }
-}
-
-createDB()*/
 
   def contextDestroyed(p1: ServletContextEvent) {
     AkkaApp.actorSystem.shutdown()
@@ -27,6 +19,7 @@ createDB()*/
 
   def contextInitialized(p1: ServletContextEvent) {
     AkkaApp.actorSystem = ActorSystem("RestAkkaApplication")
+    DBConnector.ping()
   }
 }
 
